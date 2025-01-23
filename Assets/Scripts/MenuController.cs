@@ -1,0 +1,120 @@
+using Oculus.Platform;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+
+public class MenuController : MonoBehaviour
+{
+    public GameObject welcomeText;
+    public GameObject mainMenuCanvas;
+    public GameObject defaultEventMenuCanvas;
+    public GameObject controlsCanvas;
+    public GameObject optionsCanvas;
+    private static bool shownWelcome = false;
+
+    private void Start()
+    {
+        print("uhhh scene on");
+        if (shownWelcome)
+        {
+            print("show main menu");
+            ShowMainMenuCanvas();
+        }
+        else
+        {
+            print("Welcome Text Show");
+            ShowWelcomeText();
+            shownWelcome = true;
+        }
+    }
+
+    public GameObject[] menuObjects;
+    public void ShowWelcomeText()
+    {
+        foreach (GameObject obj in menuObjects)
+        {
+            if (obj == mainMenuCanvas) obj.SetActive(true);
+            else obj.SetActive(false);
+        }
+        shownWelcome = true;
+        //mainMenuCanvas.SetActive(true);
+        //defaultEventMenuCanvas.SetActive(false);
+        //controlsCanvas.SetActive(false);
+        //optionsCanvas.SetActive(false);
+    }
+    public void ShowMainMenuCanvas()
+    {
+        foreach (GameObject obj in menuObjects)
+        {
+            if (obj == mainMenuCanvas) obj.SetActive(true);
+            else obj.SetActive(false);
+        }
+        //mainMenuCanvas.SetActive(true);
+        //defaultEventMenuCanvas.SetActive(false);
+        //controlsCanvas.SetActive(false);
+        //optionsCanvas.SetActive(false);
+    }
+    public void ShowDefaultEventMenuCanvas()
+    {
+        foreach (GameObject obj in menuObjects)
+        {
+            if (obj == defaultEventMenuCanvas) obj.SetActive(true);
+            else obj.SetActive(false);
+        }
+        //mainMenuCanvas.SetActive(false);
+        //defaultEventMenuCanvas.SetActive(true);
+        //controlsCanvas.SetActive(false);
+        //optionsCanvas.SetActive(false);
+    }
+    public void ShowControlsCanvas()
+    {
+        foreach (GameObject obj in menuObjects)
+        {
+            if (obj == controlsCanvas) obj.SetActive(true);
+            else obj.SetActive(false);
+        }
+        //mainMenuCanvas.SetActive(false);
+        //defaultEventMenuCanvas.SetActive(false);
+        //controlsCanvas.SetActive(true);
+        //optionsCanvas.SetActive(false);
+    }
+    public void ShowOptionsCanvas()
+    {
+        foreach (GameObject obj in menuObjects)
+        {
+            if (obj == optionsCanvas) obj.SetActive(true);
+            else obj.SetActive(false);
+        }
+        //mainMenuCanvas.SetActive(false);
+        //defaultEventMenuCanvas.SetActive(false);
+        //controlsCanvas.SetActive(false);
+        //optionsCanvas.SetActive(true);
+    }
+    public void Hto2E2MBtn()
+    {
+        SceneManager.LoadScene("2E2Mtest");
+    }
+    public void Hto4MBtn()
+    {
+        SceneManager.LoadScene("4M");
+    }
+    public void METBtn()
+    {
+        SceneManager.LoadScene("MET");
+    }
+    public void MinBiasBtn()
+    {
+        SceneManager.LoadScene("Minimum Bias");
+    }
+    public void BJetBtn()
+    {
+        SceneManager.LoadScene("B jet plus mu");
+    }
+    public void CustomBtn() 
+    {
+        SceneManager.LoadScene("LoadingScene");
+
+    }
+}

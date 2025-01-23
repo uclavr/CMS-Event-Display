@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 04ef6252450645040aa60df60128ce65
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - jsonText: {instanceID: 0}
+  - hcalSegmentationData: {fileID: 4900000, guid: 3f415b89543d931479d117100d7e7fac,
+      type: 3}
+  - frame: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
