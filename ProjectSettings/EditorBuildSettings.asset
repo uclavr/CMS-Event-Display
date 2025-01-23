@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Main menu/Main menu.unity
+    guid: 062c8eeccecbb99439bbc0f1df63699b
+  - enabled: 1
+    path: Assets/Scenes/2E2M test/2E2Mtest.unity
+    guid: f9e2438e88811bc4d9559de092d0e28a
+  - enabled: 1
+    path: Assets/Scenes/4m scene/4m scene/4m.unity
+    guid: 9eaaaaee5a8a96947847860a83516ed1
+  - enabled: 1
+    path: Assets/Scenes/MET/MET.unity
+    guid: 956f53d305e12a2479da49d6249c76fa
+  - enabled: 1
+    path: Assets/Scenes/Minimum Bias/Minimum Bias.unity
+    guid: a7d810edc9bbd064a9bf9360e6e0d8f7
+  - enabled: 1
+    path: Assets/Scenes/B jet plus mu/B jet plus mu.unity
+    guid: 89eb48e1325841e4698af411160dac5e
+  - enabled: 1
+    path: Assets/Scenes/Custom Scene/LoadingScene.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/LoadingTest/LoadingSceneTest.unity
+    guid: 5d8e026640e6a6149b29debbab6073a4
+  m_configObjects:
+    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: bfa1182bd221b4ca89619141f66f1260,
+      type: 2}
+    Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: dc5a169419fa04987b057f65238cf3ba,
+      type: 2}
+    UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 3d4f130f92a0b2b4cb550d8aedaae287,
+      type: 2}
+    UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: a49cadc1a815591479693b955ccf08c1,
+      type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 1a4c68ca72a83449f938d669337cb305,
+      type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 048b9a4f0969fc9459349cbec4c2e40e,
+      type: 2}
