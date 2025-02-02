@@ -16,18 +16,22 @@ public class MenuController : MonoBehaviour
 
     private void Start()
     {
-        print("uhhh scene on");
-        if (shownWelcome)
-        {
-            print("show main menu");
-            ShowMainMenuCanvas();
-        }
-        else
-        {
-            print("Welcome Text Show");
-            ShowWelcomeText();
-            shownWelcome = true;
-        }
+        //print("started");
+        //if (PlayerPrefs.GetInt("FirstTime", 1) == 1) 
+        //{
+        //    print("Welcome Text Show");
+        //    ShowWelcomeText();
+
+        //    PlayerPrefs.SetInt("FirstTime", 0);
+        //    PlayerPrefs.Save();
+        //}
+        //else
+        //{
+        //    print("show main menu");
+        //    ShowMainMenuCanvas();
+        //}
+        ShowMainMenuCanvas();
+
     }
 
     public GameObject[] menuObjects;
@@ -94,6 +98,7 @@ public class MenuController : MonoBehaviour
     }
     public void Hto2E2MBtn()
     {
+        print("uhhh scene on");//went through
         SceneManager.LoadScene("2E2Mtest");
     }
     public void Hto4MBtn()

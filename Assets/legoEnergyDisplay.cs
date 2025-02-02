@@ -15,14 +15,15 @@ public class legoEnergyDisplay : MonoBehaviour
 {
     private const float scalerY = 0.5f;
     private const float boxLengthY = 4f * scalerY;
-    public JObject jsonFile;
-    public TextAsset jsonText;
+    public static JObject jsonFile;
+    public static TextAsset jsonText;
     public GameObject scaleTextPrefab; // Reference to the Text prefab
     private XRSimpleInteractable grabInteractable;
     private Transform objectTransform;
-    public GameObject toggleGroupContainer;
+    public static ToggleGroup toggleGroup;
     private int toggleVal = 1;
-    private float flag = 0;
+    private static int flag1 = 0;
+    private static int flag2 = 0;
 
     void Start()
     {
@@ -36,22 +37,31 @@ public class legoEnergyDisplay : MonoBehaviour
 
     private void Update()
     {
-        if (toggleGroupContainer != null)
+        if (flag1 == 0)
         {
-            GameObject toggleGroupContainer = GameObject.Find("ToggleGroupContainer");
-            var activeToggle = toggleGroupContainer.GetComponent<ToggleGroup>().ActiveToggles().FirstOrDefault();
-
-            if (activeToggle.name == "Toggle1")
+            if (GameObject.Find("CubeLEGO") != null)
             {
-                toggleVal = 1;
+                toggleGroup = GameObject.Find("CubeLEGO").GetComponent<LegoPlotter>().toggleGroup;
+                flag1 = 1;
             }
-            else if (activeToggle.name == "Toggle2")
+        }
+        if (toggleGroup != null)
+        {
+            var activeToggle = toggleGroup.ActiveToggles().FirstOrDefault();
+            if (activeToggle != null)
             {
-                toggleVal = 2;
-            }
-            else
-            {
-                toggleVal = 3;
+                if (activeToggle.name == "Toggle1")
+                {
+                    toggleVal = 1;
+                }
+                else if (activeToggle.name == "Toggle2")
+                {
+                    toggleVal = 2;
+                }
+                else
+                {
+                    toggleVal = 3;
+                }
             }
         }
     }
@@ -74,17 +84,14 @@ public class legoEnergyDisplay : MonoBehaviour
         float maxEnergyHCAL = boxLengthY / 2;
         float maxEnergyECAL = boxLengthY / 2;
         float energyMultiplier = 1f;
-        print(flag);
         //jsonFile = GameObject.Find("DataInteractionManager").GetComponent<LegoPlotScript>().jsonFile;  // IN THE FINAL VERSION USE THIS
-        if(flag == 0)
+        if(flag2 == 0)
         {
-            print("yo");
             if (GameObject.Find("CubeLEGO") != null)
             {
-                
                 jsonText = GameObject.Find("CubeLEGO").GetComponent<LegoPlotter>().jsonText;
                 jsonFile = JObject.Parse(jsonText.text);
-                flag = 1;
+                flag2 = 1;
             }
         }
         jsonDataHB = jsonFile["hbHitDatas"];
@@ -276,10 +283,11 @@ public class legoEnergyDisplay : MonoBehaviour
         GameObject instantiatedText = Instantiate(scaleTextPrefab, transform.position, Quaternion.identity);
         instantiatedText.tag = "Destroyable";
         TextMeshPro scaleText = instantiatedText.GetComponent<TextMeshPro>();
-        scaleText.text = $"{Math.Round(objectTransform.localScale.y / energyMultiplier, 2)} GeV";
+        scaleText.text = $"{Math.Round(objectTransform.localScale.y * scalerY / energyMultiplier, 2)} GeV";
 
         // Position the text above the object
         //Vector3 worldPosition = objectTransform.position + Vector3.up * (objectTransform.localScale.y + 0.5f);
+        scaleText.color = Color.white;
         instantiatedText.transform.position = objectTransform.position + Vector3.up * (objectTransform.localScale.y / 2 + 0.3f);
         instantiatedText.transform.LookAt(Camera.main.transform);
         instantiatedText.transform.Rotate(0, 180, 0);

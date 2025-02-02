@@ -8,7 +8,7 @@ public class LegoTabController : MonoBehaviour
     public GameObject MenuCanvas;
     public GameObject CutCanvas;
     public GameObject SelectionMenu;
-    public GameObject VisibilityCanvas;
+    public GameObject FilterMenu;
     public GameObject OtherMenu;
     public GameObject ControlsMenu;
     public GameObject LegoMenu;
@@ -59,7 +59,7 @@ public class LegoTabController : MonoBehaviour
     }
 
     // Visibility button - show the Visibility canvas
-    public void VisibilityBtn()
+    public void FilterBtn()
     {
         ShowCanvas(2);
     }
@@ -136,7 +136,7 @@ public class LegoTabController : MonoBehaviour
         //SelectionCanvas.SetActive(false);
         SelectionMenu.SetActive(false);
         CutCanvas.SetActive(false);
-        VisibilityCanvas.SetActive(false);
+        FilterMenu.SetActive(false);
         OtherMenu.SetActive(false);
         ControlsMenu.SetActive(false);
         LegoMenu.SetActive(false);
@@ -157,7 +157,7 @@ public class LegoTabController : MonoBehaviour
                 CutCanvas.SetActive(true);
                 break;
             case 2:
-                VisibilityCanvas.SetActive(true);
+                FilterMenu.SetActive(true);
                 break;
             case 3:
                 OtherMenu.SetActive(true);
@@ -186,7 +186,7 @@ public class LegoTabController : MonoBehaviour
                 CutCanvas.SetActive(true);
                 break;
             case 2:
-                VisibilityCanvas.SetActive(true);
+                FilterMenu.SetActive(true);
                 break;
             case 3:
                 OtherMenu.SetActive(true);
