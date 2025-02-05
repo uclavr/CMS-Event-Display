@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 public class LegoTabController : MonoBehaviour
 {
     public GameObject MenuCanvas;
-    public GameObject CutCanvas;
+    //public GameObject CutCanvas; // deprecated
     public GameObject SelectionMenu;
     public GameObject FilterMenu;
     public GameObject OtherMenu;
@@ -16,7 +16,7 @@ public class LegoTabController : MonoBehaviour
     public GameObject eventDisp;
     public GameObject cubeboi;
 
-    private int lastActive = 0; // Tracks the last active canvas (0 = Selection, 1 = Cut, 2 = Visibility, 3 = Options)
+    private int lastActive = 0; // Tracks the last active canvas (0 = Selection, 1 = Filter, 2 = Other)
 
     // Toggle the MenuCanvas visibility and manage the last active canvas
     public void MenuBtn()
@@ -32,9 +32,9 @@ public class LegoTabController : MonoBehaviour
         {
             // Activate MenuCanvas and show the last active canvas
             MenuCanvas.SetActive(true);
-            if (lastActive == 5)
+            if (lastActive == 4)
             {
-                ChildTabs[5].SetActive(true);
+                ChildTabs[4].SetActive(true);
                 //MenuCanvas.SetActive(false);
             }
             else
@@ -52,27 +52,29 @@ public class LegoTabController : MonoBehaviour
         ShowCanvas(0);
     }
 
+    /* deprecated
     // Cuts button - show the Cut canvas
     public void CutsBtn()
     {
         ShowCanvas(1);
     }
+    */
 
     // Visibility button - show the Visibility canvas
     public void FilterBtn()
     {
-        ShowCanvas(2);
+        ShowCanvas(1);
     }
 
     // Other button - show the Other menu
     public void OtherBtn()
     {
-        ShowCanvas(3);
+        ShowCanvas(2);
     }
 
     public void ControlsBtn()
     {
-        ShowCanvas(4);
+        ShowCanvas(3);
     }
 
     // Switch to LEGO plot
@@ -89,7 +91,7 @@ public class LegoTabController : MonoBehaviour
                 HideAllCanvases();
                 HideAllTabs();
                 MenuCanvas.SetActive(false);
-                lastActive = 5;
+                lastActive = 4;
             }
             else
             {
@@ -122,7 +124,7 @@ public class LegoTabController : MonoBehaviour
     {
         foreach (GameObject tab in ChildTabs)
         {
-            if (tab == ChildTabs[5])
+            if (tab == ChildTabs[4])
             {
                 break;
             }
@@ -135,7 +137,7 @@ public class LegoTabController : MonoBehaviour
     {
         //SelectionCanvas.SetActive(false);
         SelectionMenu.SetActive(false);
-        CutCanvas.SetActive(false);
+        //CutCanvas.SetActive(false);    //deprecated
         FilterMenu.SetActive(false);
         OtherMenu.SetActive(false);
         ControlsMenu.SetActive(false);
@@ -150,22 +152,23 @@ public class LegoTabController : MonoBehaviour
         switch (canvasIndex)
         {
             case 0:
-                //SelectionCanvas.SetActive(true);
                 SelectionMenu.SetActive(true);
                 break;
+            /* deprecated
             case 1:
                 CutCanvas.SetActive(true);
                 break;
-            case 2:
+            */
+            case 1:
                 FilterMenu.SetActive(true);
                 break;
-            case 3:
+            case 2:
                 OtherMenu.SetActive(true);
                 break;
-            case 4:
+            case 3:
                 ControlsMenu.SetActive(true);
                 break;
-            case 5: // special lego case
+            case 4: // special lego case
                 LegoMenu.SetActive(true);
                 break;
         }
@@ -182,24 +185,25 @@ public class LegoTabController : MonoBehaviour
                 //SelectionCanvas.SetActive(true);
                 SelectionMenu.SetActive(true);
                 break;
+            /*
             case 1:
                 CutCanvas.SetActive(true);
                 break;
-            case 2:
+            */
+            case 1:
                 FilterMenu.SetActive(true);
                 break;
-            case 3:
+            case 2:
                 OtherMenu.SetActive(true);
                 break;
-            case 4:
+            case 3:
                 ControlsMenu.SetActive(true);
                 break;
-            case 5: // special lego case
+            case 4: // special lego case
                 LegoMenu.SetActive(true);
                 break;
             default:
-                //SelectionCanvas.SetActive(true);  // Default to SelectionCanvas
-                SelectionMenu.SetActive(true);  // Default to SelectionCanvas
+                SelectionMenu.SetActive(true);  // Default to Selection Menu
                 break;
         }
     }

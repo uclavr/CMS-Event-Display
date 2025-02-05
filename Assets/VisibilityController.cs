@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class VisibilityController : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class VisibilityController : MonoBehaviour
 
         //Set the current State to the flipped value
         TEC.SetActive(currentState);
+        EventSystem.current.SetSelectedGameObject(null); //fix for the weird button remaining selected problem
     }
 
 
@@ -34,6 +36,7 @@ public class VisibilityController : MonoBehaviour
 
         //Set the current State to the flipped value
         PixelEndcap.SetActive(currentState1);
+        EventSystem.current.SetSelectedGameObject(null); //fix for the weird button remaining selected problem
     }
 
     public void PixelBarBtn()
@@ -45,6 +48,7 @@ public class VisibilityController : MonoBehaviour
 
         //Set the current State to the flipped value
         PixelBarrel.SetActive(currentState2);
+        EventSystem.current.SetSelectedGameObject(null); //fix for the weird button remaining selected problem
     }
 
     public void CSCBtn()
@@ -56,6 +60,7 @@ public class VisibilityController : MonoBehaviour
 
         //Set the current State to the flipped value
         CSC.SetActive(currentState3);
+        EventSystem.current.SetSelectedGameObject(null); //fix for the weird button remaining selected problem
     }
 
 
