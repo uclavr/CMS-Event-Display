@@ -29,6 +29,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LoadingTest/LoadingSceneTest.unity
     guid: 5d8e026640e6a6149b29debbab6073a4
+  - enabled: 1
+    path: Assets/Scenes/Lambda2Delta/Lambda2Delta.unity
+    guid: 9a81eb6030da7124a82a3acdd9707d90
+  - enabled: 1
+    path: Assets/Scenes/W2LNu/W2LNu.unity
+    guid: 58a90526e326fa04a939c78bb99e1081
+  - enabled: 1
+    path: Assets/Scenes/GG2H24B/GG2H24B.unity
+    guid: a0632e6edc71e0d42961a48154310357
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: bfa1182bd221b4ca89619141f66f1260,
       type: 2}
