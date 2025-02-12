@@ -7,17 +7,20 @@ using UnityEngine;
 public class Scale : MonoBehaviour
 {
     public List<GameObject> objects;
+    public List<GameObject> fixedGeoObjects;
     public float scaler;
     Vector3 scaleVector;
     Vector3 maxVector = new Vector3(10.0f, 10.0f, 10.0f);
-
+    public float moveSpeed = 0.1f;  // Speed of object movement
+    private Vector3 moveVector = Vector3.zero;  // Movement vector for each update
+    private Camera mainCamera;
     void Start()
     {
         var loader = GameObject.Find("Loader");
         objects = loader.GetComponent<fileLoad>().objectsLoaded;
         scaler = 0.2f;
+        mainCamera = Camera.main;
     }
-
     void Update()
     {
         OVRInput.Update();
@@ -27,6 +30,11 @@ public class Scale : MonoBehaviour
             else
             {
                 foreach (var obj in objects)
+                {
+                    obj.transform.localScale += new Vector3(0.01f, 0.01f, 0.01f);
+                    scaleVector = obj.transform.localScale;
+                }
+                foreach (var obj in fixedGeoObjects)
                 {
                     obj.transform.localScale += new Vector3(0.01f, 0.01f, 0.01f);
                     scaleVector = obj.transform.localScale;
@@ -41,8 +49,15 @@ public class Scale : MonoBehaviour
             {
                 foreach (var obj in objects)
                 {
-                    obj.transform.localScale  += new Vector3(-0.01f, -0.01f, -0.01f);
+                    obj.transform.localScale += new Vector3(-0.01f, -0.01f, -0.01f);
                     scaleVector = obj.transform.localScale;
+
+                }
+                foreach (var obj in fixedGeoObjects)
+                {
+                    obj.transform.localScale += new Vector3(-0.01f, -0.01f, -0.01f);
+                    scaleVector = obj.transform.localScale;
+
                 }
                 //Event.gameObject.transform.localScale += new Vector3(-0.01f, -0.01f, -0.01f);
             }
@@ -65,5 +80,6 @@ public class Scale : MonoBehaviour
                 obj.transform.localScale = scaleVector;
             }
         }*/
+        //}
     }
 }

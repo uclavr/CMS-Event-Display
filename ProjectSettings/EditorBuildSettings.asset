@@ -38,6 +38,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GG2H24B/GG2H24B.unity
     guid: a0632e6edc71e0d42961a48154310357
+  - enabled: 1
+    path: Assets/Scenes/GFusionHiggs/GFusionHiggs.unity
+    guid: 3a38b61b671664343b8286af661b3d39
+  - enabled: 1
+    path: Assets/Scenes/QuarkPPHiggs/QuarkPPHiggs.unity
+    guid: 90e6b6a5b3ceb1445a48a7e1ac2ca129
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: bfa1182bd221b4ca89619141f66f1260,
       type: 2}

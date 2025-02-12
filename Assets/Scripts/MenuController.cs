@@ -124,17 +124,22 @@ public class MenuController : MonoBehaviour
     }
     public void LambdaBtn()
     {
-        print("uhhh scene on");//went through
         SceneManager.LoadScene("Lambda2Delta");
     }
     public void GluGluBtn()
     {
-        print("uhhh scene on");//went through
         SceneManager.LoadScene("GG2H24B");
     }
     public void W2LNuBtn()
     {
-        print("uhhh scene on");//went through
         SceneManager.LoadScene("W2LNu");
+    }
+    public void GFusionHiggsBtn()
+    {
+        SceneManager.LoadScene("GFusionHiggs");
+    }
+    public void QuarkPPHiggsBtn()
+    {
+        SceneManager.LoadScene("QuarkPPHiggs");
     }
 }
