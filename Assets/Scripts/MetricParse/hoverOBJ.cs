@@ -17,7 +17,6 @@ using static System.Net.Mime.MediaTypeNames;
 
 public class hoverOBJ : MonoBehaviour
 {
-    public GameObject scaleTextPrefab; // Reference to the Text prefab
     private XRSimpleInteractable grabInteractable;
     private Transform objectTransform;
     public XRRayInteractor xrRayInteractor;
