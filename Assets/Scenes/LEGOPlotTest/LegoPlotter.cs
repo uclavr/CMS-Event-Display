@@ -98,23 +98,35 @@ public class LegoPlotter : MonoBehaviour
 
     void Awake()
     {
-        string jsonpath; 
-        if (UnityEngine.Application.isEditor == false)
+        string jsonpath;
+        if (jsonText != null) // for default events
         {
-            jsonpath = @"/data/local/tmp/obj/totaldata.json"; //from headset 
+            jsonFile = (JObject)JToken.Parse(jsonText.text);
+        }
+        else if (UnityEngine.Application.isEditor == false)
+        {
+            jsonpath = @"/data/local/tmp/obj/totaldata.json"; //from headset
+            print(jsonpath);
+            using (StreamReader file = File.OpenText(jsonpath))
+            using (JsonTextReader reader = new JsonTextReader(file))
+            {
+                jsonFile = (JObject)JToken.ReadFrom(reader);
+                string jsonString = jsonFile.ToString();
+                jsonText = new TextAsset(jsonString);
+            }
         }
         else
         {
             print("load no good :(");
             jsonpath = @"C:\Users\uclav\Desktop\andrew\totaldata(masterclass139707779).json";
-        }
-        print(jsonpath);
-        using (StreamReader file = File.OpenText(jsonpath))
-        using (JsonTextReader reader = new JsonTextReader(file))
-        {
-            jsonFile = (JObject)JToken.ReadFrom(reader);
-            string jsonString = jsonFile.ToString();
-            jsonText = new TextAsset(jsonString);
+            print(jsonpath);
+            using (StreamReader file = File.OpenText(jsonpath))
+            using (JsonTextReader reader = new JsonTextReader(file))
+            {
+                jsonFile = (JObject)JToken.ReadFrom(reader);
+                string jsonString = jsonFile.ToString();
+                jsonText = new TextAsset(jsonString);
+            }
         }
     }
 
