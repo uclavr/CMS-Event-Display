@@ -17,7 +17,7 @@ public class CustomGeneral : MonoBehaviour
     private GameObject currentObject;
     private List<GameObject> subObjects;
     public GameObject CutCanvas;
-    public GameObject Event;
+    //public GameObject Event;
 
     public bool secondaryHandState;
     public bool primaryHandState;
@@ -156,33 +156,6 @@ public class CustomGeneral : MonoBehaviour
             //Set the current State to the flipped value
             CutCanvas.SetActive(currentState);
         } else if (!OVRInput.Get(OVRInput.Button.PrimaryThumbstick)) { thumbState = false; }
-        //if (OVRInput.Get(OVRInput.Button.PrimaryThumbstickUp))
-        //{
-        //    if (Event.gameObject.transform.localScale.magnitude >= 10.0f) return;
-        //    Event.gameObject.transform.localScale += new Vector3(0.01f, 0.01f, 0.01f);
-        //}
-        //if (OVRInput.Get(OVRInput.Button.PrimaryThumbstickDown))
-        //{
-        //    if (Event.gameObject.transform.localScale.x <= 0.2f) return;
-        //    Event.gameObject.transform.localScale += new Vector3(-0.01f, -0.01f, -0.01f);
-        //}
-        float thumbstickY = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick).y;
-        //print(thumbstickY);
-        // Check if the thumbstick is being pushed up (zoom in) or down (zoom out)
-        if (thumbstickY > 0)
-        {
-            print("up");
-            // Check if the zoom in limits have been reached (e.g., zoom out is too far)
-            if (Vector3.Distance(Camera.main.transform.position, Event.transform.position) <= 1.0f) return;  // Don't zoom in too much
-            Event.transform.position += Camera.main.transform.forward * 0.1f;  // Zoom in (move the object closer)
-        }
-        else if (thumbstickY < 0)
-        {
-            print("down");
-            // Check if the zoom out limits have been reached (e.g., zoom in is too far)
-            if (Vector3.Distance(Camera.main.transform.position, Event.transform.position) >= 10.0f) return;  // Don't zoom out too much
-            Event.transform.position -= Camera.main.transform.forward * 0.1f;  // Zoom out (move the object farther)
-        }
         if (OVRInput.Get(OVRInput.Button.SecondaryHandTrigger)&&!secondaryHandState)
             {
             

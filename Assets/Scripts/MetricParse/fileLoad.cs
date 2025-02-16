@@ -589,8 +589,7 @@ public class fileLoad : MonoBehaviour
         }
         //Code that runs in editor
         else
-        {
-            
+        { 
             jsonpath = @"C:\Users\uclav\Desktop\andrew\totaldata(masterclass139707779).json";
             metpath = @"C:\Users\uclav\Desktop\Event_1096322990\METData.json";
             metpath = @"C:\Users\uclav\Desktop\Event_1096322990\METData.json";
@@ -629,14 +628,12 @@ public class fileLoad : MonoBehaviour
                     indexer = 0;
 
                     FileInfo f;
-
-                    f = new FileInfo($@"C:\Users\uclav\Desktop\andrew\Event_139707779\{path}");
-                    
+                    f = new FileInfo($@"C:\Users\uclav\Downloads\IGDATA\obj_files\masterclass_11\Event_139707779\{path}");
                     if (f.Length == 0)
                     {
                         continue;
                     }
-                    var fs = new FileStream($@"C:\Users\uclav\Desktop\andrew\Event_139707779\{path}", FileMode.Open, FileAccess.Read);
+                    var fs = new FileStream($@"C:\Users\uclav\Downloads\IGDATA\obj_files\masterclass_11\Event_1397077799\{path}", FileMode.Open, FileAccess.Read);
                     //var fs = new FileStream($@"C:\Users\uclav\");
                     GameObject loadedObject = new OBJLoader().Load(fs);
                     loadedObject.transform.localScale = Vector3.one;
