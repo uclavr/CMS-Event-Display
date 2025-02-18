@@ -21,7 +21,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class fileLoad : MonoBehaviour
 {
     string objpath = @"C:\Users\uclav\Desktop\Event_1096322990\";
-    string eventfolder = @"C:\Users\uclav\Desktop\Event_1096322990";
+    string eventfolder = @"C:\Users\uclav\Downloads\IGDATA\obj_files\masterclass_11\Event_139707779";
     public List<GameObject> objectsLoaded;
 
     private int indexer;
@@ -170,7 +170,6 @@ public class fileLoad : MonoBehaviour
                         item.AddComponent<hoverOBJ>();
                         item.AddComponent<XRSimpleInteractable>();
                         item.name = name;
-                        print("test");
                         print($"fileload{item.name}");
                     }
                     //Handle the materials based on the items
@@ -589,10 +588,10 @@ public class fileLoad : MonoBehaviour
         }
         //Code that runs in editor
         else
-        { 
-            jsonpath = @"C:\Users\uclav\Desktop\andrew\totaldata(masterclass139707779).json";
-            metpath = @"C:\Users\uclav\Desktop\Event_1096322990\METData.json";
-            metpath = @"C:\Users\uclav\Desktop\Event_1096322990\METData.json";
+        {
+            jsonpath = @"C:\Users\uclav\Downloads\IGDATA\json_data_files\totaldata(masterclass139707779).json";
+            //metpath = @"C:\Users\uclav\Desktop\Event_1096322990\METData.json";
+            //metpath = @"C:\Users\uclav\Desktop\Event_1096322990\METData.json";
             using (StreamReader file = File.OpenText(jsonpath))
             using (JsonTextReader reader = new JsonTextReader(file))
             {
@@ -633,14 +632,13 @@ public class fileLoad : MonoBehaviour
                     {
                         continue;
                     }
-                    var fs = new FileStream($@"C:\Users\uclav\Downloads\IGDATA\obj_files\masterclass_11\Event_1397077799\{path}", FileMode.Open, FileAccess.Read);
-                    //var fs = new FileStream($@"C:\Users\uclav\");
+                    var fs = new FileStream($@"C:\Users\uclav\Downloads\IGDATA\obj_files\masterclass_11\Event_139707779\{path}", FileMode.Open, FileAccess.Read);
                     GameObject loadedObject = new OBJLoader().Load(fs);
+
                     loadedObject.transform.localScale = Vector3.one;
                     string name = path.Split('.')[0];
                     loadedObject.name = name;
                     allObjects.Add(loadedObject);
-
                     //loadedObject.transform.SetParent(parent);
 
                     GameObject child = loadedObject.transform.GetChild(0).gameObject;

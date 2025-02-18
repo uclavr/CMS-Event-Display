@@ -37,6 +37,7 @@ public class CustomGeneral : MonoBehaviour
         index1 = 0;
         index2 = 0;
         sceneObjects = GameObject.Find("Loader").GetComponent<fileLoad>().allObjects;
+        print("length of sceneobjects: "+sceneObjects.Count);
         UnityEngine.Debug.Log(sceneObjects[index1].name);
         textComponent.text = $"Selected Item: {sceneObjects[index1].name}\nActive: {sceneObjects[index1].activeSelf}";
     }

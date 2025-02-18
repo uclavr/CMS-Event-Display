@@ -42,15 +42,5 @@ public class General : MonoBehaviour
             //Set the current State to the flipped value
             CutCanvas.SetActive(currentState);
         }
-        if (OVRInput.Get(OVRInput.Button.PrimaryThumbstickUp))
-        {
-            if (Event.gameObject.transform.localScale.magnitude >= 10.0f) return;
-            Event.gameObject.transform.localScale += new Vector3(0.01f,0.01f,0.01f);
-        }
-        if (OVRInput.Get(OVRInput.Button.PrimaryThumbstickDown))
-        {
-            if (Event.gameObject.transform.localScale.x <= 0.2f) return;
-            Event.gameObject.transform.localScale += new Vector3(-0.01f, -0.01f, -0.01f);
-        }
     }
 }
