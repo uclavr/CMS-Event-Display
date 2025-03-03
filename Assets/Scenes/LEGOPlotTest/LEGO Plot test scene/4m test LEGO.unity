@@ -52512,10 +52512,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MenuCanvas: {fileID: 0}
-  CutCanvas: {fileID: 1707351505}
   SelectionMenu: {fileID: 0}
-  VisibilityCanvas: {fileID: 1269741332}
+  FilterMenu: {fileID: 0}
   OtherMenu: {fileID: 0}
+  ControlsMenu: {fileID: 0}
   LegoMenu: {fileID: 0}
   ChildTabs: []
   eventDisp: {fileID: 0}
@@ -53425,7 +53425,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
-    m_Bits: 1
+    m_Bits: 4294967295
   m_DistanceCalculationMode: 1
   m_SelectMode: 0
   m_CustomReticle: {fileID: 0}
@@ -64161,10 +64161,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MenuCanvas: {fileID: 1499369020}
-  CutCanvas: {fileID: 1707351505}
   SelectionMenu: {fileID: 1764597510157469349}
-  VisibilityCanvas: {fileID: 1269741332}
+  FilterMenu: {fileID: 0}
   OtherMenu: {fileID: 45281514}
+  ControlsMenu: {fileID: 0}
   LegoMenu: {fileID: 851746749}
   ChildTabs:
   - {fileID: 1020943205}
@@ -114701,9 +114701,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggleGroup: {fileID: 636722367}
+  jetToggle: {fileID: 0}
   legoPlotObjects:
   - {fileID: 5755500916971581683, guid: dca664e5b7e6ca843be0d441424076bd, type: 3}
   - {fileID: 6722399564990114584, guid: 81a1f18e9b30f7e4fad7760a0048b3a4, type: 3}
+  - {fileID: 7493039450039329054, guid: 3c676f1262f980b4b9641c39ac80cc93, type: 3}
+  jsonText: {fileID: 0}
   hcalSegmentationData: {fileID: 4900000, guid: 3f415b89543d931479d117100d7e7fac,
     type: 3}
   cubeboi: {fileID: 1566594451029602937}

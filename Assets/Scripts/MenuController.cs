@@ -7,47 +7,18 @@ using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour
 {
-    public GameObject welcomeText;
     public GameObject mainMenuCanvas;
     public GameObject defaultEventMenuCanvas;
     public GameObject controlsCanvas;
     public GameObject optionsCanvas;
-    private static bool shownWelcome = false;
 
     private void Start()
     {
-        //print("started");
-        //if (PlayerPrefs.GetInt("FirstTime", 1) == 1) 
-        //{
-        //    print("Welcome Text Show");
-        //    ShowWelcomeText();
-
-        //    PlayerPrefs.SetInt("FirstTime", 0);
-        //    PlayerPrefs.Save();
-        //}
-        //else
-        //{
-        //    print("show main menu");
-        //    ShowMainMenuCanvas();
-        //}
         ShowMainMenuCanvas();
-
     }
 
     public GameObject[] menuObjects;
-    public void ShowWelcomeText()
-    {
-        foreach (GameObject obj in menuObjects)
-        {
-            if (obj == mainMenuCanvas) obj.SetActive(true);
-            else obj.SetActive(false);
-        }
-        shownWelcome = true;
-        //mainMenuCanvas.SetActive(true);
-        //defaultEventMenuCanvas.SetActive(false);
-        //controlsCanvas.SetActive(false);
-        //optionsCanvas.SetActive(false);
-    }
+
     public void ShowMainMenuCanvas()
     {
         foreach (GameObject obj in menuObjects)
@@ -55,22 +26,15 @@ public class MenuController : MonoBehaviour
             if (obj == mainMenuCanvas) obj.SetActive(true);
             else obj.SetActive(false);
         }
-        //mainMenuCanvas.SetActive(true);
-        //defaultEventMenuCanvas.SetActive(false);
-        //controlsCanvas.SetActive(false);
-        //optionsCanvas.SetActive(false);
     }
     public void ShowDefaultEventMenuCanvas()
     {
+        print("pressed default");
         foreach (GameObject obj in menuObjects)
         {
             if (obj == defaultEventMenuCanvas) obj.SetActive(true);
             else obj.SetActive(false);
         }
-        //mainMenuCanvas.SetActive(false);
-        //defaultEventMenuCanvas.SetActive(true);
-        //controlsCanvas.SetActive(false);
-        //optionsCanvas.SetActive(false);
     }
     public void ShowControlsCanvas()
     {
@@ -79,10 +43,6 @@ public class MenuController : MonoBehaviour
             if (obj == controlsCanvas) obj.SetActive(true);
             else obj.SetActive(false);
         }
-        //mainMenuCanvas.SetActive(false);
-        //defaultEventMenuCanvas.SetActive(false);
-        //controlsCanvas.SetActive(true);
-        //optionsCanvas.SetActive(false);
     }
     public void ShowOptionsCanvas()
     {
@@ -91,14 +51,10 @@ public class MenuController : MonoBehaviour
             if (obj == optionsCanvas) obj.SetActive(true);
             else obj.SetActive(false);
         }
-        //mainMenuCanvas.SetActive(false);
-        //defaultEventMenuCanvas.SetActive(false);
-        //controlsCanvas.SetActive(false);
-        //optionsCanvas.SetActive(true);
+
     }
     public void Hto2E2MBtn()
     {
-        print("uhhh scene on");//went through
         SceneManager.LoadScene("2E2Mtest");
     }
     public void Hto4MBtn()
@@ -140,6 +96,6 @@ public class MenuController : MonoBehaviour
     }
     public void QuarkPPHiggsBtn()
     {
-        SceneManager.LoadScene("QuarkPPHiggs");
+        SceneManager.LoadScene("QuarkPP");
     }
 }

@@ -15,7 +15,7 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Net;
 using TMPro;
-using UnityEngine.XR.Interaction.Toolkit;
+
 //using static Unity.VisualScripting.Metadata;
 
 public class fileLoad : MonoBehaviour
@@ -168,7 +168,7 @@ public class fileLoad : MonoBehaviour
                     {
                         item.AddComponent<MeshCollider>();
                         item.AddComponent<hoverOBJ>();
-                        item.AddComponent<XRSimpleInteractable>();
+                        item.AddComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable>();
                         item.name = name;
                         print($"fileload{item.name}");
                     }
@@ -589,13 +589,37 @@ public class fileLoad : MonoBehaviour
         //Code that runs in editor
         else
         {
+           
             jsonpath = @"C:\Users\uclav\Downloads\IGDATA\json_data_files\totaldata(masterclass139707779).json";
             //metpath = @"C:\Users\uclav\Desktop\Event_1096322990\METData.json";
             //metpath = @"C:\Users\uclav\Desktop\Event_1096322990\METData.json";
-            using (StreamReader file = File.OpenText(jsonpath))
-            using (JsonTextReader reader = new JsonTextReader(file))
+            try
             {
-                totalJson = (JObject)JToken.ReadFrom(reader);
+                using (StreamReader file = File.OpenText(jsonpath))
+                using (JsonTextReader reader = new JsonTextReader(file))
+                {
+                    totalJson = (JObject)JToken.ReadFrom(reader);
+                }
+            }
+            catch (FileNotFoundException ex)
+            {
+                print($"Error: The file '{jsonpath}' was not found. Please check the path.");
+                print(ex.Message);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                print($"Error: Access denied to the file '{jsonpath}'.");
+                print(ex.Message);
+            }
+            catch (JsonReaderException ex)
+            {
+                print("Error: The file does not contain valid JSON.");
+                print(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                print("An unexpected error occurred.");
+                print(ex.Message);
             }
 
             /*using (StreamReader file = File.OpenText(metpath))
@@ -647,7 +671,7 @@ public class fileLoad : MonoBehaviour
                     {           
                         item.AddComponent<MeshCollider>();
                         item.AddComponent<hoverOBJ>();
-                        item.AddComponent<XRSimpleInteractable>();
+                        item.AddComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable>();
 
                     }
                     switch (path)

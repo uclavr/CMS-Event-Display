@@ -8,8 +8,8 @@ public class DefaultSelection : MonoBehaviour
 {
     public List<GameObject> sceneObjects;
     public TMP_Text textComponent;
-    private int index1;
     private bool state;
+    private int index1;
     private int index2;
     private bool controlState;
     private GameObject currentObject;
@@ -29,10 +29,6 @@ public class DefaultSelection : MonoBehaviour
     void Update()
     {
         //OVRInput.Update();
-        if (OVRInput.GetDown(OVRInput.Button.SecondaryHandTrigger) == null)
-        {
-            print("brother why");
-        }
         if (OVRInput.GetDown(OVRInput.Button.SecondaryHandTrigger))
         {
             index1 += 1;

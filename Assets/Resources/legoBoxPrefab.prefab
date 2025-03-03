@@ -128,8 +128,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fbb2d6385bcdbd428f600b9c0327d02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toggleGroup: {fileID: 0}
-  jsonText: {fileID: 0}
   scaleTextPrefab: {fileID: 6722399564990114584, guid: 81a1f18e9b30f7e4fad7760a0048b3a4,
     type: 3}
 --- !u!114 &5119696842008624099
@@ -150,7 +148,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
-    m_Bits: 1
+    m_Bits: 4294967295
   m_DistanceCalculationMode: 1
   m_SelectMode: 0
   m_CustomReticle: {fileID: 0}

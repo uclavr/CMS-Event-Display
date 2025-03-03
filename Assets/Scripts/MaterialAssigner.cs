@@ -20,10 +20,49 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class MaterialAssigner : MonoBehaviour
 {
     public GameObject allObjectsInScene;
-
+    public HashSet<string> dataTypes = new HashSet<string>
+    {
+        "SecondaryVertices_V1",
+        "PrimaryVertices_V1",
+        "PFJets_V2",
+        "PFJets",
+        "TrackerMuons_V1",
+        "TrackerMuons_V2",
+        "GlobalMuons_V1",
+        "GlobalMuons_V2",
+        "StandaloneMuons_V1",
+        "StandaloneMuons_V2",
+        "GsfElectrons_V1",
+        "GsfElectrons_V2",
+        "GsfElectrons_V3",
+        "EERecHits_V2",
+        "EBRecHits_V2",
+        "ESRecHits_V2",
+        "HBRecHits_V2",
+        "HERecHits_V2",
+        "HORecHits_V2",
+        "HFRecHits_V2",
+        "MuonChambers_V1",
+        "RPCRecHits_V1",
+        "Tracks_V1",
+        "Tracks_V2",
+        "Tracks_V3",
+        "Tracks_V4",
+        "SuperClusters_V1",
+        "CSCSegments_V1",
+        "CSCSegments_V2",
+        "TrackDets_V1",
+        "SiPixelClusters_V1",
+        "SiStripClusters_V1",
+        "DTRecHits_V1",
+        "DTRecSegment4D_V1",
+        "CSCRecHit2Ds_V2",
+        "MatchingCSCs_V1",
+        "TrackingRecHits_V1",
+        "CaloTowers_V2"
+    };
     void Start()
     {
-        print("started materialassigner");
         Material muonMaterial = Resources.Load<Material>("Muon Track Material");
         Material mMaterial = Resources.Load<Material>("Chamber Material");
         Material vertexMaterial = Resources.Load<Material>("Vertex Material");
@@ -50,12 +89,29 @@ public class MaterialAssigner : MonoBehaviour
         {
             List<GameObject> children = AllChilds(obj);
             string objectName = Path.GetFileNameWithoutExtension(obj.name);
+            if (!dataTypes.Contains(objectName))
+            {
+                continue;
+            }
             foreach (var item in children)
             {
-                item.AddComponent<MeshCollider>();
-                item.AddComponent<hoverOBJ>();
-                item.AddComponent<XRSimpleInteractable>();
-                item.AddComponent<MeshRenderer>();
+                if (item.GetComponent<MeshRenderer>() == null)
+                {
+                    item.AddComponent<MeshRenderer>();
+                }
+                // DONT ADD THESE FOR NOW, I AM HANDLING THIS IN THE DEFAULTEVENTHANDLING SCRIPT AND THIS PREVENTS MY OBJ HOVER TURN OFF BUTTON FROM WORKING
+                //if (item.GetComponent<MeshCollider>() == null)
+                //{
+                //    item.AddComponent<MeshCollider>(); 
+                //}
+                //if (item.GetComponent<hoverOBJ>() == null)
+                //{
+                //    item.AddComponent<hoverOBJ>();
+                //}
+                //if (item.GetComponent<XRSimpleInteractable>() == null)
+                //{
+                //    item.AddComponent<XRSimpleInteractable>(); 
+                //}
                 switch (objectName)
                 {
                     case "SecondaryVertices_V1":

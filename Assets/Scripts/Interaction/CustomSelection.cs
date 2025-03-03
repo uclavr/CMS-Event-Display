@@ -14,6 +14,7 @@ public class CustomSelection : MonoBehaviour
     private bool controlState;
     private GameObject currentObject;
     private List<GameObject> subObjects;
+
     void Start()
     {
         state = true;

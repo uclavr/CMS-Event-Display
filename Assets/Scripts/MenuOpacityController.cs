@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class MenuOpacityController : MonoBehaviour
 {
@@ -44,5 +45,6 @@ public class MenuOpacityController : MonoBehaviour
             Color currentColor = panelImage.color;
             panelImage.color = new Color(currentColor.r, currentColor.g, currentColor.b, clampedAlpha); // Change only the alpha
         }
+        EventSystem.current.SetSelectedGameObject(null);
     }
 }

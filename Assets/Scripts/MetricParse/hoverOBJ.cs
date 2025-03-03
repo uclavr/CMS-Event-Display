@@ -17,9 +17,9 @@ using static System.Net.Mime.MediaTypeNames;
 
 public class hoverOBJ : MonoBehaviour
 {
-    private XRSimpleInteractable grabInteractable;
+    private UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable grabInteractable;
     private Transform objectTransform;
-    public XRRayInteractor xrRayInteractor;
+    public UnityEngine.XR.Interaction.Toolkit.Interactors.XRRayInteractor xrRayInteractor;
     public GameObject textPrefab;
     //public ToggleGroup toggleGroup;
     //private Toggle activeToggle;
@@ -30,10 +30,10 @@ public class hoverOBJ : MonoBehaviour
         textPrefab = Resources.Load<GameObject>("legoTextPrefab");
         GameObject xrOriginObject = GameObject.Find("XR Origin");
         Transform cameraOffset = xrOriginObject.transform.Find("Camera Offset");
-        xrRayInteractor = cameraOffset.Find("Right Ray Interactor").GetComponent<XRRayInteractor>();
+        xrRayInteractor = cameraOffset.Find("Right Ray Interactor").GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactors.XRRayInteractor>();
 
         // Hover code
-        grabInteractable = GetComponent<XRSimpleInteractable>();
+        grabInteractable = GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable>();
         objectTransform = transform;
         grabInteractable.hoverEntered.AddListener(OnHoverEntered);
         grabInteractable.hoverExited.AddListener(OnHoverExited);

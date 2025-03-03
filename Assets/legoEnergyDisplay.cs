@@ -18,18 +18,22 @@ public class legoEnergyDisplay : MonoBehaviour
     public static JObject jsonFile;
     public static TextAsset jsonText;
     public GameObject scaleTextPrefab; // Reference to the Text prefab
-    private XRSimpleInteractable grabInteractable;
+    private UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable grabInteractable;
     private Transform objectTransform;
+    public static GameObject cubeLego;
     public static ToggleGroup toggleGroup;
+    public static Toggle jetToggle;
+    private bool jetActive;
     private int toggleVal = 1;
-    private static int flag1 = 0;
-    private static int flag2 = 0;
+    public static int flag1 = 0;
+    public static int flag2 = 0;
 
+
+    // IMPORTANT NOTE: STATIC VARIABLES ARE RESET IN RESETSTATICVARIABLES.CS SCRIPT TO ACCOMODATE SCENE MANAGEMENT
     void Start()
     {
         // Code that does the actual hovering stuff
-        //toggleGroup = GameObject.Find("ToggleGroupContainer").GetComponent<ToggleGroup>();
-        grabInteractable = GetComponent<XRSimpleInteractable>();
+        grabInteractable = GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable>();
         objectTransform = transform;
         grabInteractable.hoverEntered.AddListener(OnHoverEntered);
         grabInteractable.hoverExited.AddListener(OnHoverExited);
@@ -41,9 +45,17 @@ public class legoEnergyDisplay : MonoBehaviour
         {
             if (GameObject.Find("CubeLEGO") != null)
             {
-                toggleGroup = GameObject.Find("CubeLEGO").GetComponent<LegoPlotter>().toggleGroup;
+                cubeLego = GameObject.Find("CubeLEGO");
+                toggleGroup = cubeLego.GetComponent<LegoPlotter>().toggleGroup;
+                jetToggle = cubeLego.GetComponent<LegoPlotter>().jetToggle;
+                //toggleGroup = GameObject.Find("CubeLEGO").GetComponent<LegoPlotter>().toggleGroup;
+
                 flag1 = 1;
             }
+        }
+        if (jetToggle != null)
+        {
+            jetActive = jetToggle.isOn;
         }
         if (toggleGroup != null)
         {
@@ -81,11 +93,14 @@ public class legoEnergyDisplay : MonoBehaviour
         JToken jsonDataHF;
         JToken jsonDataEB;
         JToken jsonDataEE;
+        JToken jsonDataPFJets;
         float maxEnergyHCAL = boxLengthY / 2;
         float maxEnergyECAL = boxLengthY / 2;
         float energyMultiplier = 1f;
+        float delta_height = Mathf.Epsilon * (float)Math.Pow(10, 37);
+        //jsonFile = cubeLego.GetComponent<LegoPlotter>().jsonFile;
         //jsonFile = GameObject.Find("DataInteractionManager").GetComponent<LegoPlotScript>().jsonFile;  // IN THE FINAL VERSION USE THIS
-        if(flag2 == 0)
+        if (flag2 == 0)
         {
             if (GameObject.Find("CubeLEGO") != null)
             {
@@ -100,6 +115,7 @@ public class legoEnergyDisplay : MonoBehaviour
         jsonDataHF = jsonFile["hfHitDatas"];
         jsonDataEB = jsonFile["ebHitDatas"];
         jsonDataEE = jsonFile["eeHitDatas"];
+        jsonDataPFJets = jsonFile["jetDatas"];
 
         if (toggleVal==1)
         {
@@ -178,6 +194,22 @@ public class legoEnergyDisplay : MonoBehaviour
             }
 
             float maxEnergy = maxEnergyHCAL + maxEnergyECAL;
+
+            if (jetActive)
+            {
+                if (jsonDataPFJets != null) // Accounting for jets as well (Much bigger than ecal, hcal energies usually)
+                {
+                    foreach (JToken item in jsonDataPFJets)
+                    {
+                        float et = item["et"].Value<float>();
+                        if (et > maxEnergy)
+                        {
+                            maxEnergy = et;
+                        }
+                    }
+                }
+            }
+
             if (maxEnergy > boxLengthY)
             {
                 energyMultiplier = boxLengthY / maxEnergy;
@@ -236,6 +268,22 @@ public class legoEnergyDisplay : MonoBehaviour
             }
 
             float maxEnergy = maxEnergyHCAL + maxEnergyECAL;
+
+            if (jetActive)
+            {
+                if (jsonDataPFJets != null) // Accounting for jets as well (Much bigger than ecal, hcal energies usually)
+                {
+                    foreach (JToken item in jsonDataPFJets)
+                    {
+                        float et = item["et"].Value<float>();
+                        if (et > maxEnergy)
+                        {
+                            maxEnergy = et;
+                        }
+                    }
+                }
+            }
+
             if (maxEnergy > boxLengthY)
             {
                 energyMultiplier = boxLengthY / maxEnergy;
@@ -269,6 +317,22 @@ public class legoEnergyDisplay : MonoBehaviour
             }
 
             float maxEnergy = maxEnergyHCAL + maxEnergyECAL;
+
+            if (jetActive)
+            {
+                if (jsonDataPFJets != null) // Accounting for jets as well (Much bigger than ecal, hcal energies usually)
+                {
+                    foreach (JToken item in jsonDataPFJets)
+                    {
+                        float et = item["et"].Value<float>();
+                        if (et > maxEnergy)
+                        {
+                            maxEnergy = et;
+                        }
+                    }
+                }
+            }
+
             if (maxEnergy > boxLengthY)
             {
                 energyMultiplier = boxLengthY / maxEnergy;
@@ -283,7 +347,14 @@ public class legoEnergyDisplay : MonoBehaviour
         GameObject instantiatedText = Instantiate(scaleTextPrefab, transform.position, Quaternion.identity);
         instantiatedText.tag = "Destroyable";
         TextMeshPro scaleText = instantiatedText.GetComponent<TextMeshPro>();
-        scaleText.text = $"{Math.Round(objectTransform.localScale.y * scalerY / energyMultiplier, 2)} GeV";
+        if (objectTransform.gameObject.name == "legoJetPrefab(Clone)")
+        {
+            scaleText.text = $"{Math.Round(objectTransform.localScale.y * scalerY * 2/ energyMultiplier, 2)} GeV";
+        }
+        else
+        {
+            scaleText.text = $"{Math.Round(objectTransform.localScale.y * scalerY / energyMultiplier, 2)} GeV";
+        }        
 
         // Position the text above the object
         //Vector3 worldPosition = objectTransform.position + Vector3.up * (objectTransform.localScale.y + 0.5f);

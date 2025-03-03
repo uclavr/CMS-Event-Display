@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
+
+using TMPro;
 
 public class DefaultEventHandling : MonoBehaviour
 {
     public GameObject Event; // Reference to the parent GameObject
     private bool meshColliderEnabled = true;
     List<GameObject> hoverObjs = new List<GameObject>();
+    //private int temp = 0; //DEBUGGING
 
     // Start is called before the first frame update
     void Start()
@@ -47,8 +49,10 @@ public class DefaultEventHandling : MonoBehaviour
         {
             targetObject.AddComponent<MeshCollider>();
             targetObject.AddComponent<hoverOBJ>();
-            targetObject.AddComponent<XRSimpleInteractable>();
-            hoverObjs.Add(targetObject);
+            targetObject.AddComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable>();
+            //// DEBUGGING
+            //HeadsetDebuggerText(targetObject, temp);
+            //temp += 1;
         }
     }
 
@@ -63,7 +67,47 @@ public class DefaultEventHandling : MonoBehaviour
             if (meshCollider != null) // If a MeshCollider exists
             {
                 meshCollider.enabled = meshColliderEnabled; // Enable/Disable MeshCollider based on the state
+                print("bruh");
             }
         }
     }
+
+    //void HeadsetDebuggerText(GameObject targetObject, int i)
+    //{
+    //    // Get the parent of the GameObject to which hoverOBJ was added
+    //    Transform parentTransform = targetObject.transform.parent;
+
+    //    if (parentTransform != null)
+    //    {
+    //        // Create a new GameObject for the 3D TextMesh Pro
+    //        GameObject textObject = new GameObject("ComponentCheckText");
+
+    //        // Add a TextMeshPro component to the new GameObject (this will render 3D text)
+    //        TextMeshPro textMesh = textObject.AddComponent<TextMeshPro>();
+
+    //        // Check if the required components are attached
+    //        hoverOBJ hoverObjComponent = targetObject.GetComponent<hoverOBJ>();
+    //        MeshCollider meshColliderComponent = targetObject.GetComponent<MeshCollider>();
+    //        XRSimpleInteractable xrSimpleInteractableComponent = targetObject.GetComponent<XRSimpleInteractable>();
+
+    //        // Check if the MeshCollider is enabled (making it interactable)
+    //        bool isMeshColliderInteractable = meshColliderComponent != null && meshColliderComponent.enabled;
+
+    //        // Generate the message to display
+    //        string message = $"Components for {parentTransform.name}:\n";
+    //        message += $"hoverOBJ: {(hoverObjComponent != null ? "Attached" : "Not Attached")}\n";
+    //        message += $"MeshCollider: {(meshColliderComponent != null ? "Attached" : "Not Attached")}\n";
+    //        message += $"MeshCollider Interactable: {(isMeshColliderInteractable ? "Enabled" : "Disabled")}\n";
+    //        message += $"XRSimpleInteractable: {(xrSimpleInteractableComponent != null ? "Attached" : "Not Attached")}\n";
+
+    //        // Set the text to the message
+    //        textMesh.text = message;
+    //        textMesh.fontSize = 1.5f; // Set the font size (adjust to your preference)
+    //        textMesh.color = Color.white; // Set the text color
+    //        textMesh.alignment = TextAlignmentOptions.Center;  // Center the text
+
+    //        // Position the text in the 3D world (adjust the offset to position the text relative to the object)
+    //        textObject.transform.position = targetObject.transform.position + Vector3.up * 1.5f + new Vector3(i, i, i); // 1.5f above the object
+    //    }
+    //}
 }

@@ -159,9 +159,7 @@ public class CustomGeneral : MonoBehaviour
         } else if (!OVRInput.Get(OVRInput.Button.PrimaryThumbstick)) { thumbState = false; }
         if (OVRInput.Get(OVRInput.Button.SecondaryHandTrigger)&&!secondaryHandState)
             {
-            
-            secondaryHandState = true;
-                UnityEngine.Debug.Log("shit has been called");
+                secondaryHandState = true;
                 index2 = 0;
                 index1 += 1; UnityEngine.Debug.Log(index1);
                 if (index1 == sceneObjects.Count)
@@ -170,7 +168,6 @@ public class CustomGeneral : MonoBehaviour
                 }
                 currentObject = sceneObjects[index1];
                 state = currentObject.activeSelf;
-                UnityEngine.Debug.Log(state);
                 textComponent.text = $"Selected Item: {sceneObjects[index1].name}\nActive: {state}\n";
                 subObjects = AllChilds(currentObject);
             } else if (!OVRInput.Get(OVRInput.Button.SecondaryHandTrigger)){ secondaryHandState = false; }
@@ -232,7 +229,6 @@ public class CustomGeneral : MonoBehaviour
             if (OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger)&&!indexState)
             {
             indexState = true;
-                //UnityEngine.Debug.Log(!sceneObjects[index1].activeSelf);
                 state = !sceneObjects[index1].activeSelf;
                 sceneObjects[index1].SetActive(state);
                 textComponent.text = $"Selected Item:{sceneObjects[index1].name}\nActive: {state}\n";

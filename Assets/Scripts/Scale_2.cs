@@ -11,7 +11,6 @@ public class Scale_2 : MonoBehaviour
     public float zoom_speed = 0.01f;
     public float max_zoom = 10.0f;
     public float min_zoom = 0.2f;
-    private Camera mainCamera;
     void Start()
     {
         
@@ -20,7 +19,7 @@ public class Scale_2 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        OVRInput.Update();
+        //OVRInput.Update();
         if (OVRInput.Get(OVRInput.Button.PrimaryThumbstickUp))
         {
             if (GeometryObjects.gameObject.transform.localScale.magnitude >= max_zoom) ;
