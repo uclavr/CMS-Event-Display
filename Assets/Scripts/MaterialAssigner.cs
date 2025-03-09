@@ -15,11 +15,26 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Net;
 using TMPro;
-using UnityEngine.XR.Interaction.Toolkit;
+
 
 public class MaterialAssigner : MonoBehaviour
 {
     public GameObject allObjectsInScene;
+    private int indexer;
+
+    public List<GameObject> sceneObjects;
+    public List<GameObject> superClusterObjects;
+    public List<GameObject> trackerMuonObjects;
+    public List<GameObject> globalMuonObjects;
+    public List<GameObject> standaloneMuonObjects;
+    public List<GameObject> electronObjects;
+    public List<GameObject> trackObjects;
+    public List<GameObject> rpcRecHitObjects;
+    public List<GameObject> cscSegmentObjects;
+    public List<GameObject> photonObjects;
+    public List<GameObject> jetObjects;
+    public List<GameObject> vertexObjects;
+
     public HashSet<string> dataTypes = new HashSet<string>
     {
         "SecondaryVertices_V1",
@@ -61,6 +76,7 @@ public class MaterialAssigner : MonoBehaviour
         "TrackingRecHits_V1",
         "CaloTowers_V2"
     };
+
     void Start()
     {
         Material muonMaterial = Resources.Load<Material>("Muon Track Material");
@@ -83,7 +99,6 @@ public class MaterialAssigner : MonoBehaviour
         Material trackingrechitsMaterial = Resources.Load<Material>("Tracking Rec Hits Material");
         Material calotowerMaterial = Resources.Load<Material>("Calo Tower Material");
 
-
         List<GameObject> objects = AllChilds(allObjectsInScene);
         foreach (var obj in objects)
         {
@@ -99,27 +114,57 @@ public class MaterialAssigner : MonoBehaviour
                 {
                     item.AddComponent<MeshRenderer>();
                 }
-                // DONT ADD THESE FOR NOW, I AM HANDLING THIS IN THE DEFAULTEVENTHANDLING SCRIPT AND THIS PREVENTS MY OBJ HOVER TURN OFF BUTTON FROM WORKING
-                //if (item.GetComponent<MeshCollider>() == null)
-                //{
-                //    item.AddComponent<MeshCollider>(); 
-                //}
-                //if (item.GetComponent<hoverOBJ>() == null)
-                //{
-                //    item.AddComponent<hoverOBJ>();
-                //}
-                //if (item.GetComponent<XRSimpleInteractable>() == null)
-                //{
-                //    item.AddComponent<XRSimpleInteractable>(); 
-                //}
+                if (item.GetComponent<MeshCollider>() == null)
+                {
+                    item.AddComponent<MeshCollider>();
+                }
+                if (item.GetComponent<hoverOBJ>() == null)
+                {
+                    item.AddComponent<hoverOBJ>();
+                }
+                if (item.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable>() == null)
+                {
+                    item.AddComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable>();
+                }
                 switch (objectName)
                 {
                     case "SecondaryVertices_V1":
                         item.GetComponent<MeshRenderer>().material = secondaryVertexMaterial;
+                        JToken json = totalJson["secondaryVertexDatas"][indexer];
+                        VertexComponent component = item.AddComponent<VertexComponent>();
+
+                        component.isValid = json["isValid"].Value<int>();
+                        component.isFake = json["isFake"].Value<int>();
+                        component.position = json["pos"].ToObject<double[]>();
+                        component.xError = json["xError"].Value<double>();
+                        component.yError = json["yError"].Value<double>();
+                        component.zError = json["zError"].Value<double>();
+                        component.chi2 = json["chi2"].Value<double>();
+                        component.ndof = json["ndof"].Value<double>();
+
+                        vertexObjects.Add(item);
+                        indexer++;
                         break;
 
                     case "PrimaryVertices_V1":
                         item.GetComponent<MeshRenderer>().material = vertexMaterial;
+                        VertexComponent component = item.AddComponent<VertexComponent>();
+
+                        JToken json = totalJson["primaryVertexDatas"][indexer];
+
+                        component.isValid = json["isValid"].Value<int>();
+                        component.isFake = json["isFake"].Value<int>();
+                        component.position = json["pos"].ToObject<double[]>();
+                        component.xError = json["xError"].Value<double>();
+                        component.yError = json["yError"].Value<double>();
+                        component.zError = json["zError"].Value<double>();
+                        component.chi2 = json["chi2"].Value<double>();
+                        component.ndof = json["ndof"].Value<double>();
+
+                        GameObject locatingsphere = Instantiate(LocatingSpherePrefab, new Vector3((float)component.position[0], (float)(component.position[1]), (float)(component.position[2])), Quaternion.identity);
+
+                        vertexObjects.Add(item);
+                        indexer++;
                         break;
 
                     case "PFJets_V2":

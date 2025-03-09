@@ -220,10 +220,10 @@ public class OVRGradleGeneration
 		{
 			targetOculusPlatform.Add("quest");
 		}
-		UnityEngine.Debug.LogFormat("QuestFamily = {0}: Quest = {1}, Quest2 = {2}",
-			OVRDeviceSelector.isTargetDeviceQuestFamily,
-			OVRDeviceSelector.isTargetDeviceQuest,
-			OVRDeviceSelector.isTargetDeviceQuest2);
+		//UnityEngine.Debug.LogFormat("QuestFamily = {0}: Quest = {1}, Quest2 = {2}",
+		//	OVRDeviceSelector.isTargetDeviceQuestFamily,
+		//	//OVRDeviceSelector.isTargetDeviceQuest,
+		//	OVRDeviceSelector.isTargetDeviceQuest2);
 
 		OVRProjectConfig projectConfig = OVRProjectConfig.GetProjectConfig();
 		if (projectConfig != null && projectConfig.systemSplashScreen != null)

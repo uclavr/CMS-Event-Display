@@ -66,6 +66,13 @@ public class DefaultDataLoad : MonoBehaviour
 
             GameObject child = objitem.transform.GetChild(0).gameObject;
             List<GameObject> children = AllChilds(objitem);
+            foreach (var item in children)
+            {
+                item.AddComponent<MeshCollider>();
+                item.AddComponent<hoverOBJ>();
+                item.AddComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable>();
+            }
+
             switch (objitem.name)
             {
                 case "SecondaryVertices_V1":

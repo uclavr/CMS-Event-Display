@@ -9,15 +9,17 @@ public class DefaultEventHandling : MonoBehaviour
     public GameObject Event; // Reference to the parent GameObject
     private bool meshColliderEnabled = true;
     List<GameObject> hoverObjs = new List<GameObject>();
-    //private int temp = 0; //DEBUGGING
+    private int temp = 0; //DEBUGGING
 
     // Start is called before the first frame update
     void Start()
     {
-        // Start processing from the Event GameObject's children
-        ProcessChildren(Event.transform, 0); // Start with the top level (0)
-    }
+        //// Start processing from the Event GameObject's children
+        //ProcessChildren(Event.transform, 0); // Start with the top level (0)
 
+        //// Start the coroutine to trigger the headset debugger after 10 seconds
+        //StartCoroutine(TriggerHeadsetDebuggerAfterDelay());
+    }
     // Method to recursively process children, grandchildren, and great-grandchildren
     void ProcessChildren(Transform parentTransform, int currentLevel)
     {
@@ -44,18 +46,24 @@ public class DefaultEventHandling : MonoBehaviour
     // Method to add components to a GameObject if they are not already added
     void AddComponents(GameObject targetObject)
     {
-        // Only add components if they are not already added
-        if (targetObject.GetComponent<hoverOBJ>() == null)
+        // Only add components if they are not already added... andrew changed this to be a bit more specific just in case 
+        if (targetObject.GetComponent<MeshCollider>() == null)
         {
             targetObject.AddComponent<MeshCollider>();
-            targetObject.AddComponent<hoverOBJ>();
+        }
+        if (targetObject.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable>() == null)
+        {
             targetObject.AddComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable>();
+        }
+        if (targetObject.GetComponent<hoverOBJ>() == null)
+        {
+            targetObject.AddComponent<hoverOBJ>();
             //// DEBUGGING
             //HeadsetDebuggerText(targetObject, temp);
             //temp += 1;
         }
+        hoverObjs.Add(targetObject);
     }
-
     
     public void ToggleBtnOBJHover()
     {
@@ -70,44 +78,87 @@ public class DefaultEventHandling : MonoBehaviour
                 print("bruh");
             }
         }
+
     }
 
-    //void HeadsetDebuggerText(GameObject targetObject, int i)
+    IEnumerator TriggerHeadsetDebuggerAfterDelay()
+    {
+        yield return new WaitForSeconds(10f); // Wait for 10 seconds
+        Debug.Log("Triggering headset debugger after 10 seconds.");
+
+        // Trigger your HeadsetDebuggerText method here. 
+        // Assuming the targetObject and temp values are relevant to the method.
+        foreach (var item in hoverObjs)
+        {
+            HeadsetDebuggerText(item, temp);
+            temp += 1;
+        }
+    }
+
+    void HeadsetDebuggerText(GameObject targetObject, int i)
+    {
+        // Get the parent of the GameObject to which hoverOBJ was added
+        Transform parentTransform = targetObject.transform.parent;
+
+        if (parentTransform != null)
+        {
+            // Create a new GameObject for the 3D TextMesh Pro
+            GameObject textObject = new GameObject("ComponentCheckText");
+
+            // Add a TextMeshPro component to the new GameObject (this will render 3D text)
+            TextMeshPro textMesh = textObject.AddComponent<TextMeshPro>();
+
+            // Check if the required components are attached
+            hoverOBJ hoverObjComponent = targetObject.GetComponent<hoverOBJ>();
+            MeshCollider meshColliderComponent = targetObject.GetComponent<MeshCollider>();
+            UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable xrSimpleInteractableComponent = targetObject.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable>();
+
+            // Check if the MeshCollider is enabled (making it interactable)
+            bool isMeshColliderInteractable = meshColliderComponent != null && meshColliderComponent.enabled;
+
+            // Generate the message to display
+            string message = $"Components for {parentTransform.name}:\n";
+            message += $"hoverOBJ: {(hoverObjComponent != null ? "Attached" : "Not Attached")}\n";
+            message += $"MeshCollider: {(meshColliderComponent != null ? "Attached" : "Not Attached")}\n";
+            message += $"MeshCollider Interactable: {(isMeshColliderInteractable ? "Enabled" : "Disabled")}\n";
+            message += $"XRSimpleInteractable: {(xrSimpleInteractableComponent != null ? "Attached" : "Not Attached")}\n";
+
+            // Set the text to the message
+            textMesh.text = message;
+            textMesh.fontSize = 1.5f; // Set the font size (adjust to your preference)
+            textMesh.color = Color.white; // Set the text color
+            textMesh.alignment = TextAlignmentOptions.Center;  // Center the text
+
+            // Position the text in the 3D world (adjust the offset to position the text relative to the object)
+            textObject.transform.position = targetObject.transform.position + Vector3.up * 1.5f + new Vector3(i, i, i); // 1.5f above the object
+        }
+    }
+
+    //andrew stuff
+    //public GameObject allObjectsInScene;
+    //private List<GameObject> AllChilds(GameObject root)
     //{
-    //    // Get the parent of the GameObject to which hoverOBJ was added
-    //    Transform parentTransform = targetObject.transform.parent;
-
-    //    if (parentTransform != null)
+    //    List<GameObject> result = new List<GameObject>();
+    //    if (root.transform.childCount > 0)
     //    {
-    //        // Create a new GameObject for the 3D TextMesh Pro
-    //        GameObject textObject = new GameObject("ComponentCheckText");
-
-    //        // Add a TextMeshPro component to the new GameObject (this will render 3D text)
-    //        TextMeshPro textMesh = textObject.AddComponent<TextMeshPro>();
-
-    //        // Check if the required components are attached
-    //        hoverOBJ hoverObjComponent = targetObject.GetComponent<hoverOBJ>();
-    //        MeshCollider meshColliderComponent = targetObject.GetComponent<MeshCollider>();
-    //        XRSimpleInteractable xrSimpleInteractableComponent = targetObject.GetComponent<XRSimpleInteractable>();
-
-    //        // Check if the MeshCollider is enabled (making it interactable)
-    //        bool isMeshColliderInteractable = meshColliderComponent != null && meshColliderComponent.enabled;
-
-    //        // Generate the message to display
-    //        string message = $"Components for {parentTransform.name}:\n";
-    //        message += $"hoverOBJ: {(hoverObjComponent != null ? "Attached" : "Not Attached")}\n";
-    //        message += $"MeshCollider: {(meshColliderComponent != null ? "Attached" : "Not Attached")}\n";
-    //        message += $"MeshCollider Interactable: {(isMeshColliderInteractable ? "Enabled" : "Disabled")}\n";
-    //        message += $"XRSimpleInteractable: {(xrSimpleInteractableComponent != null ? "Attached" : "Not Attached")}\n";
-
-    //        // Set the text to the message
-    //        textMesh.text = message;
-    //        textMesh.fontSize = 1.5f; // Set the font size (adjust to your preference)
-    //        textMesh.color = Color.white; // Set the text color
-    //        textMesh.alignment = TextAlignmentOptions.Center;  // Center the text
-
-    //        // Position the text in the 3D world (adjust the offset to position the text relative to the object)
-    //        textObject.transform.position = targetObject.transform.position + Vector3.up * 1.5f + new Vector3(i, i, i); // 1.5f above the object
+    //        foreach (Transform VARIABLE in root.transform)
+    //        {
+    //            Searcher(result, VARIABLE.gameObject);
+    //        }
     //    }
+    //    return result;
     //}
+
+    //private void Searcher(List<GameObject> list, GameObject root)
+    //{
+    //    list.Add(root);
+    //    if (root.transform.childCount > 0)
+    //    {
+    //        foreach (Transform VARIABLE in root.transform)
+    //        {
+    //            Searcher(list, VARIABLE.gameObject);
+    //        }
+    //    } 
+    //}
+    // end of andrew stuff
 }

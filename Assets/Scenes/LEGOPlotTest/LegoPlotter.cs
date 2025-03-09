@@ -733,8 +733,8 @@ public void jetToggleChanged()
                         phi = phi * scalerZ;
                         //radius = radius * scalerX;//Mathf.Sqrt(scalerX * scalerX + scalerZ * scalerZ);
                         print(cutType);
-                        InstantiatePFJetCylinderTYPE2(et, framePos + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(eta, et / 2, phi), radius, cutType);
-                        //InstantiatePFJetCylinder(et, framePos + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(eta, et / 2, phi), radius);
+                        InstantiatePFJetCylinder(et, framePos + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(eta, et / 2, phi), radius);
+                        //InstantiatePFJetCylinderTYPE2(et, framePos + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(eta, et / 2, phi), radius, cutType);
                     }
                 }
             }
@@ -1080,7 +1080,7 @@ public void jetToggleChanged()
 
                         eta = eta * scalerX; // Scaling down in Horizontal Plane
                         phi = phi * scalerZ;
-                        radius = radius * Mathf.Sqrt(scalerX * scalerX + scalerZ * scalerZ);
+                        //radius = radius * Mathf.Sqrt(scalerX * scalerX + scalerZ * scalerZ);
 
                         InstantiatePFJetCylinder(et, framePos + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(eta, et / 2, phi), radius);
                     }
@@ -1268,7 +1268,7 @@ public void jetToggleChanged()
 
                         eta = eta * scalerX; // Scaling down in Horizontal Plane
                         phi = phi * scalerZ;
-                        radius = radius * Mathf.Sqrt(scalerX * scalerX + scalerZ * scalerZ);
+                        //radius = radius * Mathf.Sqrt(scalerX * scalerX + scalerZ * scalerZ);
 
                         InstantiatePFJetCylinder(et, framePos + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(eta, et / 2, phi), radius);
                     }
