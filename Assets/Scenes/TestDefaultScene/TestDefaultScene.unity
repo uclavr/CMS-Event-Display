@@ -39233,7 +39233,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 661706098}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3bb9c63ce3c4d64408b9761937c57593, type: 3}
   m_Name: 
@@ -67804,12 +67804,24 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1156869179}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 890c32c988caeeb4fa72adc73b406946, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   allObjectsInScene: {fileID: 1156869179}
+  sceneObjects: []
+  superClusterObjects: []
+  trackerMuonObjects: []
+  globalMuonObjects: []
+  standaloneMuonObjects: []
+  electronObjects: []
+  trackObjects: []
+  rpcRecHitObjects: []
+  cscSegmentObjects: []
+  photonObjects: []
+  jetObjects: []
+  vertexObjects: []
 --- !u!1 &1158167099
 GameObject:
   m_ObjectHideFlags: 0
@@ -99919,11 +99931,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9520c0326553ed74f938e266a220bad0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneObjects:
+  objectsLoaded: []
+  dataObjects:
   - {fileID: 1088879735}
   - {fileID: 947995702}
-  - {fileID: 764826416}
   - {fileID: 208455861}
+  - {fileID: 764826416}
+  - {fileID: 321853801}
+  - {fileID: 2068444913}
+  - {fileID: 984480633}
+  - {fileID: 590857240}
   superClusterObjects: []
   trackerMuonObjects: []
   globalMuonObjects: []
@@ -99941,6 +99958,47 @@ MonoBehaviour:
     type: 3}
   jsonText: {fileID: 4900000, guid: ccfe7ebf6cb5aff4b94d0503f27bed0f, type: 3}
   eventObj: {fileID: 661706098}
+  paths:
+  - DTRecHits_V1.obj
+  - DTRecSegment4D_V1.obj
+  - CSCRecHit2Ds_V2.obj
+  - CaloTowers_V2
+  - MatchingCSCs_V1.obj
+  - CSCSegments_V2.obj
+  - PFJets.obj
+  - PFJets_V2.obj
+  - TrackDets_V1.obj
+  - TrackingRecHits_V1.obj
+  - SiPixelClusters_V1.obj
+  - SiStripClusters_V1.obj
+  - EBRecHits_V2.obj
+  - EERecHits_V2.obj
+  - ESRecHits_V2.obj
+  - RPCRecHits_V1.obj
+  - CSCSegments_V1.obj
+  - GsfElectrons_V1.obj
+  - GsfElectrons_V2.obj
+  - GsfElectrons_V3.obj
+  - HBRecHits_V2.obj
+  - HERecHits_V2.obj
+  - HFRecHits_V2.obj
+  - HORecHits_V2.obj
+  - MuonChambers_V1.obj
+  - TrackerMuons_V1.obj
+  - TrackerMuons_V2.obj
+  - GlobalMuons_V1.obj
+  - GlobalMuons_V2.obj
+  - StandaloneMuons_V1.obj
+  - StandaloneMuons_V2.obj
+  - Photons_V1.obj
+  - Tracks_V1.obj
+  - Tracks_V2.obj
+  - Tracks_V3.obj
+  - Tracks_V4.obj
+  - SuperClusters_V1.obj
+  - Vertices_V1.obj
+  - PrimaryVertices_V1.obj
+  - SecondaryVertices_V1.obj
 --- !u!4 &1806267015
 Transform:
   m_ObjectHideFlags: 0
@@ -105505,7 +105563,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Toggle Jets
+  m_text: Jets On/Off
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

@@ -4,12 +4,17 @@ using UnityEngine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
+using System.Linq;
+using System;
+using Dummiesman;
+
 
 public class DefaultDataLoad : MonoBehaviour
 {
     private int indexer;
-
-    public List<GameObject> sceneObjects;
+    public List<GameObject> objectsLoaded;
+    //public GameObject eventObject;
+    public List<GameObject> dataObjects;
     public List<GameObject> superClusterObjects;
     public List<GameObject> trackerMuonObjects;
     public List<GameObject> globalMuonObjects;
@@ -26,10 +31,68 @@ public class DefaultDataLoad : MonoBehaviour
     public GameObject locatingSphere;
     public GameObject LocatingSpherePrefab;
     public GameObject METPrefab;
+    private bool meshColliderEnabled = true;
+    private Transform parent;
 
-    private JToken jsonData;
+    //private JToken jsonData;// we never use this
+    public JObject totalJson;
     public TextAsset jsonText;
     public GameObject eventObj;
+
+    public HashSet<string> dataTypes = new HashSet<string>
+    {
+        "SecondaryVertices_V1",
+        "PrimaryVertices_V1",
+        "PFJets_V2",
+        "PFJets",
+        "TrackerMuons_V1",
+        "TrackerMuons_V2",
+        "GlobalMuons_V1",
+        "GlobalMuons_V2",
+        "StandaloneMuons_V1",
+        "StandaloneMuons_V2",
+        "GsfElectrons_V1",
+        "GsfElectrons_V2",
+        "GsfElectrons_V3",
+        "EERecHits_V2",
+        "EBRecHits_V2",
+        "ESRecHits_V2",
+        "HBRecHits_V2",
+        "HERecHits_V2",
+        "HORecHits_V2",
+        "HFRecHits_V2",
+        "MuonChambers_V1",
+        "RPCRecHits_V1",
+        "Tracks_V1",
+        "Tracks_V2",
+        "Tracks_V3",
+        "Tracks_V4",
+        "SuperClusters_V1",
+        "CSCSegments_V1",
+        "CSCSegments_V2",
+        "TrackDets_V1",
+        "SiPixelClusters_V1",
+        "SiStripClusters_V1",
+        "DTRecHits_V1",
+        "DTRecSegment4D_V1",
+        "CSCRecHit2Ds_V2",
+        "MatchingCSCs_V1",
+        "TrackingRecHits_V1",
+        "CaloTowers_V2"
+    };
+    public string[] paths = {"DTRecHits_V1.obj", "DTRecSegment4D_V1.obj","CSCRecHit2Ds_V2.obj","CaloTowers_V2", "MatchingCSCs_V1.obj","CSCSegments_V2.obj","PFJets.obj","PFJets_V2.obj","TrackDets_V1.obj","TrackingRecHits_V1.obj","SiPixelClusters_V1.obj","SiStripClusters_V1.obj","EBRecHits_V2.obj","EERecHits_V2.obj", "ESRecHits_V2.obj", "RPCRecHits_V1.obj","CSCSegments_V1.obj",
+                "GsfElectrons_V1.obj","GsfElectrons_V2.obj","GsfElectrons_V3.obj","HBRecHits_V2.obj","HERecHits_V2.obj","HFRecHits_V2.obj",
+                "HORecHits_V2.obj","MuonChambers_V1.obj","TrackerMuons_V1.obj","TrackerMuons_V2.obj","GlobalMuons_V1.obj", "GlobalMuons_V2.obj",
+                "StandaloneMuons_V1.obj","StandaloneMuons_V2.obj","Photons_V1.obj","Tracks_V1.obj","Tracks_V2.obj","Tracks_V3.obj","Tracks_V4.obj","SuperClusters_V1.obj","Vertices_V1.obj","PrimaryVertices_V1.obj","SecondaryVertices_V1.obj"};
+
+    //void Start() // ANDREW UNCOMMEMT THIS WHEN YOU HAVE GOTTEN RID OF THE OBJS IN ALLOBJECTS (THEY'RE BEING INSTANTIATED TWICE)
+    //{
+    //    parent = GameObject.Find("AllObjects").GetComponent<Transform>();
+    //    foreach (GameObject child in objectsLoaded)
+    //    {
+    //        child.transform.SetParent(parent);
+    //    }
+    //}
 
     void Awake()
     {
@@ -55,22 +118,41 @@ public class DefaultDataLoad : MonoBehaviour
 
         JObject totalJson = (JObject)JToken.Parse(jsonText.text);
 
-        foreach (var objitem in sceneObjects)
+        //LoadJson(); DOESNT WORK IN BUILD AS OF NOW
+
+        //List<GameObject> allObjects = AllChilds(eventObject); // eventObject (i.e. GG2H4B), allObjects grabs everything underneath this scene
+        //filter dataObjects to just be the datatypes in dataTypes set
+        //dataObjects = allObjects
+        //.Where(obj => dataTypes.Contains(Path.GetFileNameWithoutExtension(obj.name)))
+        //.ToList();
+
+        //LoadOBJ(); UNCOMMENT THIS WHEN EVERYTHING IS DYNAMIC
+
+        foreach (var objitem in dataObjects)
         {
             indexer = 0;
-
-            if (objitem.name == "Modified_Event_V2")
-            {
-                continue;
-            }
-
             GameObject child = objitem.transform.GetChild(0).gameObject;
-            List<GameObject> children = AllChilds(objitem);
-            foreach (var item in children)
+            objectsLoaded.Add(objitem);
+            List<GameObject> children = AllChilds(objitem); //individual jets, 
+
+            foreach (var item in children) //add MeshRenderers, MeshColliders, hoverOBJ, and XRSimpleInteractable
             {
-                item.AddComponent<MeshCollider>();
-                item.AddComponent<hoverOBJ>();
-                item.AddComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable>();
+                if (item.GetComponent<MeshRenderer>() == null)
+                {
+                    item.AddComponent<MeshRenderer>();
+                }
+                if (item.GetComponent<MeshCollider>() == null)
+                {
+                    item.AddComponent<MeshCollider>();
+                }
+                if (item.GetComponent<hoverOBJ>() == null)
+                {
+                    item.AddComponent<hoverOBJ>();
+                }
+                if (item.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable>() == null)
+                {
+                    item.AddComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable>();
+                }
             }
 
             switch (objitem.name)
@@ -424,12 +506,6 @@ public class DefaultDataLoad : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     private List<GameObject> AllChilds(GameObject root)
     {
         List<GameObject> result = new List<GameObject>();
@@ -454,4 +530,88 @@ public class DefaultDataLoad : MonoBehaviour
             }
         }
     }
+
+    //private void LoadJson() DOESNT WORK IN BUILD
+    //{
+    //    string scenePath = UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene().path;
+    //    string sceneDirectory = Path.GetDirectoryName(scenePath);
+    //    string jsonFilePath = Path.Combine(sceneDirectory, "totaldata.json"); //Go to scene directory and find totaldata.json
+    //    if (File.Exists(jsonFilePath))
+    //    {
+    //        try
+    //        {
+    //            string jsonContent = File.ReadAllText(jsonFilePath);
+
+    //            totalJson = JObject.Parse(jsonContent);
+
+    //            Debug.Log("JSON loaded successfully!");
+    //        }
+    //        catch (System.Exception e)
+    //        {
+    //            Debug.LogError($"Failed to load JSON: {e.Message}");
+    //        }
+    //    }
+    //    else
+    //    {
+    //        Debug.LogError("totaldata.json not found in scene folder!");
+    //    }
+    //}
+
+    //private void LoadOBJ() DOESNT WORK IN BUILD
+    //{
+    //    string scenePath = UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene().path;
+    //    string sceneDirectory = Path.GetDirectoryName(scenePath);
+    //    string[] allDirectories = Directory.GetDirectories(sceneDirectory, "*", SearchOption.AllDirectories);
+    //    string objpath = "";
+    //    foreach (string folder in allDirectories)
+    //    {
+    //        string[] objFiles = Directory.GetFiles(folder, "*.obj", SearchOption.TopDirectoryOnly);
+
+    //        if (objFiles.Length > 0)
+    //        {
+    //            Debug.Log($"OBJ files found in folder: {folder}");
+    //            objpath = folder +"\\";
+    //        }
+    //    }
+    //    FileInfo f;
+    //    foreach (var path in paths)
+    //    {
+    //        GameObject loadedObject;
+    //        try
+    //        {
+    //            f = new FileInfo($@"{objpath}{path}");
+    //            if ((f.Length == 0) || f == null)
+    //            {
+    //                continue;
+    //            }
+
+    //            loadedObject = new OBJLoader().Load($"{objpath}{path}");
+    //            dataObjects.Add(loadedObject);
+    //        }
+    //        catch (Exception e)
+    //        {
+    //            continue;
+    //        }
+    //    }
+
+    //}
+
+    public void ToggleBtnOBJHover()
+    {
+        meshColliderEnabled = !meshColliderEnabled; // Flip the state
+
+        foreach (var item in objectsLoaded)
+        {
+            foreach (Transform child in item.transform)
+            {
+                MeshCollider meshCollider = child.GetComponent<MeshCollider>();
+
+                if (meshCollider != null) // If a MeshCollider exists
+                {
+                    meshCollider.enabled = meshColliderEnabled; // Enable/Disable MeshCollider based on the state
+                }
+            }
+        }
+    }
+
 }

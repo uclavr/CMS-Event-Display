@@ -160,7 +160,7 @@ public class LegoPlotter : MonoBehaviour
         }
     }
 
-public void jetToggleChanged()
+    public void jetToggleChanged()
     {
         if (jetToggle.isOn)
         {
@@ -220,19 +220,19 @@ public void jetToggleChanged()
 
     void GenerateLegoPlot(int toggleNum, bool jetActive)
     {
-        if (GameObject.FindGameObjectsWithTag("Destroyable2") != null) 
+        if (GameObject.FindGameObjectsWithTag("Destroyable2") != null)
         {
             GameObject[] gos = GameObject.FindGameObjectsWithTag("Destroyable2");
             foreach (GameObject go in gos)
                 Destroy(go);
         }
-   
+
         if (GameObject.FindGameObjectsWithTag("AngleUpdate") != null)
         {
             GameObject[] gos = GameObject.FindGameObjectsWithTag("AngleUpdate");
             foreach (GameObject go in gos)
                 Destroy(go);
-        }  
+        }
 
         JToken jsonDataHB;
         JToken jsonDataHO;
@@ -371,7 +371,7 @@ public void jetToggleChanged()
             {
                 energyMultiplier = boxLengthY / maxEnergy;
             }
-            
+
 
             // Loading in HCAL Segmentation Data
             List<DataEntry> dataEntries = new List<DataEntry>();
@@ -499,7 +499,7 @@ public void jetToggleChanged()
                     if (hcalHeight != 10000)
                     {
                         InstantiateHCALBox(energy, framePos + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(eta, energy / 2, phi) + new Vector3(0, hcalHeight, 0), delEta, delPhi);
-                        if (energy>0) // ensure no stacking on negative energies
+                        if (energy > 0) // ensure no stacking on negative energies
                         {
                             etaHCALlist.Add(eta);
                             phiHCALlist.Add(phi);
@@ -509,7 +509,7 @@ public void jetToggleChanged()
                     else
                     {
                         InstantiateHCALBox(energy, framePos + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(eta, energy / 2, phi), delEta, delPhi);
-                        if (energy>0) // ensure no stacking on negative energies
+                        if (energy > 0) // ensure no stacking on negative energies
                         {
                             etaHCALlist.Add(eta);
                             phiHCALlist.Add(phi);
@@ -553,7 +553,7 @@ public void jetToggleChanged()
                     if (hcalHeight != 10000)
                     {
                         InstantiateHCALBox(energy, framePos + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(eta, energy / 2, phi) + new Vector3(0, hcalHeight, 0), delEta, delPhi);
-                        if (energy>0) // ensure no stacking on negative energies
+                        if (energy > 0) // ensure no stacking on negative energies
                         {
                             etaHCALlist.Add(eta);
                             phiHCALlist.Add(phi);
@@ -563,7 +563,7 @@ public void jetToggleChanged()
                     else
                     {
                         InstantiateHCALBox(energy, framePos + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(eta, energy / 2, phi), delEta, delPhi);
-                        if (energy>0) // ensure no stacking on negative energies
+                        if (energy > 0) // ensure no stacking on negative energies
                         {
                             etaHCALlist.Add(eta);
                             phiHCALlist.Add(phi);
@@ -607,7 +607,7 @@ public void jetToggleChanged()
                     if (hcalHeight != 10000)
                     {
                         InstantiateHCALBox(energy, framePos + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(eta, energy / 2, phi) + new Vector3(0, hcalHeight, 0), delEta, delPhi);
-                        if (energy>0) // ensure no stacking on negative energies
+                        if (energy > 0) // ensure no stacking on negative energies
                         {
                             etaHCALlist.Add(eta);
                             phiHCALlist.Add(phi);
@@ -617,7 +617,7 @@ public void jetToggleChanged()
                     else
                     {
                         InstantiateHCALBox(energy, framePos + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(eta, energy / 2, phi), delEta, delPhi);
-                        if (energy>0) // ensure no stacking on negative energies
+                        if (energy > 0) // ensure no stacking on negative energies
                         {
                             etaHCALlist.Add(eta);
                             phiHCALlist.Add(phi);
@@ -716,25 +716,27 @@ public void jetToggleChanged()
                         float radius = 0.4f; // this is for akpf4 jets only as of now
 
                         int cutType = 1;
-                        if (phi <= (Mathf.PI-radius) && phi >= (-Mathf.PI + radius))
-                        {
-                            cutType = 1;
-                        }
-                        else if (phi > (Mathf.PI - radius))
+                        if (phi > (Mathf.PI - radius))
                         {
                             cutType = 2;
                         }
-                        else
+                        else if (phi < (-Mathf.PI + radius))
                         {
-                           cutType = 3;
+                            cutType = 3;
                         }
 
                         eta = eta * scalerX; // Scaling down in Horizontal Plane
                         phi = phi * scalerZ;
                         //radius = radius * scalerX;//Mathf.Sqrt(scalerX * scalerX + scalerZ * scalerZ);
-                        print(cutType);
                         InstantiatePFJetCylinder(et, framePos + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(eta, et / 2, phi), radius);
-                        //InstantiatePFJetCylinderTYPE2(et, framePos + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(eta, et / 2, phi), radius, cutType);
+                        if (cutType == 2)
+                        {
+                            InstantiatePFJetCylinder(et, framePos + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(eta, et / 2, phi - (2 * Mathf.PI * scalerZ)), radius);
+                        }
+                        else if (cutType == 3)
+                        {
+                            InstantiatePFJetCylinder(et, framePos + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(eta, et / 2, phi + (2 * Mathf.PI * scalerZ)), radius);
+                        }
                     }
                 }
             }
@@ -1078,11 +1080,28 @@ public void jetToggleChanged()
                         float phi = item["phi"].Value<float>();
                         float radius = 0.4f; // this is for akpf4 jets only as of now
 
+                        int cutType = 1;
+                        if (phi > (Mathf.PI - radius))
+                        {
+                            cutType = 2;
+                        }
+                        else if (phi < (-Mathf.PI + radius))
+                        {
+                            cutType = 3;
+                        }
+
                         eta = eta * scalerX; // Scaling down in Horizontal Plane
                         phi = phi * scalerZ;
-                        //radius = radius * Mathf.Sqrt(scalerX * scalerX + scalerZ * scalerZ);
-
+                        //radius = radius * scalerX;//Mathf.Sqrt(scalerX * scalerX + scalerZ * scalerZ);
                         InstantiatePFJetCylinder(et, framePos + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(eta, et / 2, phi), radius);
+                        if (cutType == 2)
+                        {
+                            InstantiatePFJetCylinder(et, framePos + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(eta, et / 2, phi - (2 * Mathf.PI * scalerZ)), radius);
+                        }
+                        else if (cutType == 3)
+                        {
+                            InstantiatePFJetCylinder(et, framePos + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(eta, et / 2, phi + (2 * Mathf.PI * scalerZ)), radius);
+                        }
                     }
                 }
             }
@@ -1266,11 +1285,28 @@ public void jetToggleChanged()
                         float phi = item["phi"].Value<float>();
                         float radius = 0.4f; // this is for akpf4 jets only as of now
 
+                        int cutType = 1;
+                        if (phi > (Mathf.PI - radius))
+                        {
+                            cutType = 2;
+                        }
+                        else if (phi < (-Mathf.PI + radius))
+                        {
+                            cutType = 3;
+                        }
+
                         eta = eta * scalerX; // Scaling down in Horizontal Plane
                         phi = phi * scalerZ;
-                        //radius = radius * Mathf.Sqrt(scalerX * scalerX + scalerZ * scalerZ);
-
+                        //radius = radius * scalerX;//Mathf.Sqrt(scalerX * scalerX + scalerZ * scalerZ);
                         InstantiatePFJetCylinder(et, framePos + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(eta, et / 2, phi), radius);
+                        if (cutType == 2)
+                        {
+                            InstantiatePFJetCylinder(et, framePos + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(eta, et / 2, phi - (2 * Mathf.PI * scalerZ)), radius);
+                        }
+                        else if (cutType == 3)
+                        {
+                            InstantiatePFJetCylinder(et, framePos + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(eta, et / 2, phi + (2 * Mathf.PI * scalerZ)), radius);
+                        }
                     }
                 }
             }
@@ -1352,363 +1388,9 @@ public void jetToggleChanged()
     {
         GameObject cylinder = Instantiate(legoPlotObjects[2]);
         cylinder.transform.position = position; //center + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(0, height/2, 0);
-        cylinder.transform.localScale = new Vector3(radius, height/2, radius);
-        cylinder.tag = "Destroyable2";
-        cylinder.transform.SetParent(cubeboi.transform);
-    }
-
-    void InstantiatePFJetCylinderTYPE2(float height, Vector3 position, float radius, int cutType) //annoyingly, unity's cylinder scales twice as fast as the cube
-    {
-        /*
-        GameObject cylinder = Instantiate(legoPlotObjects[2]);
-        cylinder.transform.position = position; //center + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(0, height/2, 0);
-        cylinder.transform.localScale = new Vector3(radius, height/2, radius);
-        cylinder.tag = "Destroyable2";
-        cylinder.transform.SetParent(cubeboi.transform);
-
-        float cutZ = 0f;
-        Vector3 moveOffset = Vector3.zero;
-
-        if (cutType == 1)
-        {
-            return;
-        }
-        else if (cutType == 2)
-        {
-            // Cut at z = PI * scalerZ and move the position to currentPos - 2 * PI * scalerZ
-            cutZ = Mathf.PI * scalerZ;
-            moveOffset = new Vector3(0, 0, -2 * Mathf.PI * scalerZ);
-        }
-        else if (cutType == 3)
-        {
-            // Cut at z = -PI * scalerZ and move the position to currentPos + 2 * PI * scalerZ
-            cutZ = -Mathf.PI * scalerZ;
-            moveOffset = new Vector3(0, 0, 2 * Mathf.PI * scalerZ);
-        }
-
-        // Get the mesh of the cylinder
-        MeshFilter meshFilter = cylinder.GetComponent<MeshFilter>();
-        Mesh mesh = meshFilter.mesh;
-
-        // Store original vertices and triangles
-        Vector3[] vertices = mesh.vertices;
-        int[] triangles = mesh.triangles;
-
-        // Separate the vertices based on the Z cut plane (cutZ)
-        List<Vector3> lowerVertices = new List<Vector3>();
-        List<Vector3> upperVertices = new List<Vector3>();
-        List<int> lowerTriangles = new List<int>();
-        List<int> upperTriangles = new List<int>();
-
-        // Loop through the triangles and split them based on the Z value of the vertices
-        for (int i = 0; i < triangles.Length; i += 3)
-        {
-            // Get the indices of the triangle's vertices
-            int idx1 = triangles[i];
-            int idx2 = triangles[i + 1];
-            int idx3 = triangles[i + 2];
-
-            // Get the positions of the vertices of the triangle
-            Vector3 v1 = vertices[idx1];
-            Vector3 v2 = vertices[idx2];
-            Vector3 v3 = vertices[idx3];
-
-            // Split the triangle into lower and upper parts based on the Z value of the vertices
-            bool isLower1 = v1.z <= cutZ;
-            bool isLower2 = v2.z <= cutZ;
-            bool isLower3 = v3.z <= cutZ;
-
-            if (isLower1)
-            {
-                lowerVertices.Add(v1);
-                lowerTriangles.Add(lowerVertices.Count - 1); // Save the triangle index for the lower mesh
-            }
-            else
-            {
-                upperVertices.Add(v1);
-                upperTriangles.Add(upperVertices.Count - 1); // Save the triangle index for the upper mesh
-            }
-
-            if (isLower2)
-            {
-                lowerVertices.Add(v2);
-                lowerTriangles.Add(lowerVertices.Count - 1);
-            }
-            else
-            {
-                upperVertices.Add(v2);
-                upperTriangles.Add(upperVertices.Count - 1);
-            }
-
-            if (isLower3)
-            {
-                lowerVertices.Add(v3);
-                lowerTriangles.Add(lowerVertices.Count - 1);
-            }
-            else
-            {
-                upperVertices.Add(v3);
-                upperTriangles.Add(upperVertices.Count - 1);
-            }
-        }
-
-        // Create the lower part of the cylinder (below the cut)
-        GameObject lowerCylinder = new GameObject("LowerCylinder");
-        MeshFilter lowerMeshFilter = lowerCylinder.AddComponent<MeshFilter>();
-        MeshRenderer lowerMeshRenderer = lowerCylinder.AddComponent<MeshRenderer>();
-
-        Mesh lowerMesh = new Mesh();
-        lowerMesh.vertices = lowerVertices.ToArray();
-        lowerMesh.triangles = lowerTriangles.ToArray();
-        lowerMeshFilter.mesh = lowerMesh;
-
-        lowerCylinder.transform.position = position - moveOffset;  // Move it to the new position
-        lowerCylinder.transform.localScale = new Vector3(radius, height / 2, radius);
-        lowerCylinder.tag = "Destroyable2";
-        lowerCylinder.transform.SetParent(cubeboi.transform);
-
-        // Create the upper part of the cylinder (above the cut)
-        GameObject upperCylinder = new GameObject("UpperCylinder");
-        MeshFilter upperMeshFilter = upperCylinder.AddComponent<MeshFilter>();
-        MeshRenderer upperMeshRenderer = upperCylinder.AddComponent<MeshRenderer>();
-
-        Mesh upperMesh = new Mesh();
-        upperMesh.vertices = upperVertices.ToArray();
-        upperMesh.triangles = upperTriangles.ToArray();
-        upperMeshFilter.mesh = upperMesh;
-
-        upperCylinder.transform.position = position + moveOffset;  // Move it to the new position
-        upperCylinder.transform.localScale = new Vector3(radius, height / 2, radius);
-        upperCylinder.tag = "Destroyable2";
-        upperCylinder.transform.SetParent(cubeboi.transform);
-        */
-
-        //GameObject cylinder = Instantiate(legoPlotObjects[2]);
-
-        GameObject cylinder1 = Instantiate(legoPlotObjects[2]);
-        cylinder1.transform.position = position; //center + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(0, height/2, 0);
-        cylinder1.transform.localScale = new Vector3(radius, height / 2, radius);
-        cylinder1.tag = "Destroyable2";
-        cylinder1.transform.SetParent(cubeboi.transform);
-
-        GameObject cylinder = new GameObject();
-        cylinder.transform.position = position; //center + new Vector3(0, -boxLengthY / 2, 0) + new Vector3(0, height/2, 0);
         cylinder.transform.localScale = new Vector3(radius, height / 2, radius);
         cylinder.tag = "Destroyable2";
         cylinder.transform.SetParent(cubeboi.transform);
-       
-    }
-
-    //Mesh CreateCylinderMesh(float radius, float height, float sagitta, int segments, int heightSegments)
-    //{
-    //    float chordLength = 2 * Mathf.Sqrt(radius * radius - (radius - sagitta) * (radius - sagitta));
-    //    float cutX = chordLength / 2;
-
-    //    List<Vector3> vertices = new List<Vector3>();
-    //    List<int> triangles = new List<int>();
-
-    //    // Generate cylinder vertices
-    //    for (int y = 0; y <= heightSegments; y++)
-    //    {
-    //        float yPos = (y / (float)heightSegments) * height - height / 2;
-
-    //        for (int i = 0; i <= segments; i++)
-    //        {
-    //            float angle = (i / (float)segments) * Mathf.PI * 2;
-    //            float x = Mathf.Cos(angle) * radius;
-    //            float z = Mathf.Sin(angle) * radius;
-
-    //            if (x >= -cutX) // Apply sagitta cut
-    //                vertices.Add(new Vector3(x, yPos, z));
-    //        }
-    //    }
-
-    //    int vertCount = segments + 1;
-    //    for (int y = 0; y < heightSegments; y++)
-    //    {
-    //        for (int i = 0; i < vertCount - 1; i++)
-    //        {
-    //            int index = y * vertCount + i;
-    //            int nextIndex = index + vertCount;
-
-    //            if (index + 1 < vertices.Count && nextIndex + 1 < vertices.Count)
-    //            {
-    //                triangles.Add(index);
-    //                triangles.Add(nextIndex);
-    //                triangles.Add(index + 1);
-
-    //                triangles.Add(nextIndex);
-    //                triangles.Add(nextIndex + 1);
-    //                triangles.Add(index + 1);
-    //            }
-    //        }
-    //    }
-
-    //    Mesh mesh = new Mesh();
-    //    mesh.vertices = vertices.ToArray();
-    //    mesh.triangles = triangles.ToArray();
-    //    mesh.RecalculateNormals();
-    //    return mesh;
-    //}
-
-    public (GameObject upperHalf, GameObject lowerHalf) CutCylinder(GameObject cylinder, Plane cuttingPlane)
-    {
-        MeshFilter meshFilter = cylinder.GetComponent<MeshFilter>();
-        if (meshFilter == null || meshFilter.mesh == null)
-        {
-            print("No MeshFilter found on the GameObject.");
-            return (null, null);
-        }
-
-        Mesh originalMesh = meshFilter.mesh;
-        (Mesh upperMesh, Mesh lowerMesh) = SplitMesh(originalMesh, cuttingPlane);
-
-        // Create new GameObjects for the two halves
-        GameObject upperHalf = CreateCutObject("UpperHalf", upperMesh, cylinder);
-        GameObject lowerHalf = CreateCutObject("LowerHalf", lowerMesh, cylinder);
-
-        return (upperHalf, lowerHalf);
-    }
-
-    private (Mesh upperMesh, Mesh lowerMesh) SplitMesh(Mesh mesh, Plane cuttingPlane)
-    {
-        List<Vector3> upperVertices = new List<Vector3>();
-        List<Vector3> lowerVertices = new List<Vector3>();
-        List<int> upperTriangles = new List<int>();
-        List<int> lowerTriangles = new List<int>();
-        Dictionary<Edge, Vector3> intersectionPoints = new Dictionary<Edge, Vector3>();
-
-        Vector3[] vertices = mesh.vertices;
-        int[] triangles = mesh.triangles;
-
-        Dictionary<int, bool> vertexAbovePlane = new Dictionary<int, bool>();
-        for (int i = 0; i < vertices.Length; i++)
-        {
-            bool above = cuttingPlane.GetSide(vertices[i]);
-            vertexAbovePlane[i] = above;
-            if (above) upperVertices.Add(vertices[i]);
-            else lowerVertices.Add(vertices[i]);
-        }
-
-        for (int i = 0; i < triangles.Length; i += 3)
-        {
-            int v0 = triangles[i], v1 = triangles[i + 1], v2 = triangles[i + 2];
-            bool above0 = vertexAbovePlane[v0], above1 = vertexAbovePlane[v1], above2 = vertexAbovePlane[v2];
-            int aboveCount = (above0 ? 1 : 0) + (above1 ? 1 : 0) + (above2 ? 1 : 0);
-
-            if (aboveCount == 3)
-            {
-                upperTriangles.Add(upperVertices.IndexOf(vertices[v0]));
-                upperTriangles.Add(upperVertices.IndexOf(vertices[v1]));
-                upperTriangles.Add(upperVertices.IndexOf(vertices[v2]));
-            }
-            else if (aboveCount == 0)
-            {
-                lowerTriangles.Add(lowerVertices.IndexOf(vertices[v0]));
-                lowerTriangles.Add(lowerVertices.IndexOf(vertices[v1]));
-                lowerTriangles.Add(lowerVertices.IndexOf(vertices[v2]));
-            }
-            else
-            {
-                ProcessTriangleSplit(v0, v1, v2, above0, above1, above2, vertices, cuttingPlane,
-                                     upperVertices, lowerVertices, upperTriangles, lowerTriangles,
-                                     intersectionPoints);
-            }
-        }
-
-        Mesh upperMesh = new Mesh { vertices = upperVertices.ToArray(), triangles = upperTriangles.ToArray() };
-        Mesh lowerMesh = new Mesh { vertices = lowerVertices.ToArray(), triangles = lowerTriangles.ToArray() };
-
-        upperMesh.RecalculateNormals();
-        lowerMesh.RecalculateNormals();
-
-        return (upperMesh, lowerMesh);
-    }
-
-    private GameObject CreateCutObject(string name, Mesh mesh, GameObject original)
-    {
-        GameObject obj = new GameObject(name);
-        obj.transform.position = original.transform.position;
-        obj.transform.rotation = original.transform.rotation;
-        obj.transform.localScale = original.transform.localScale;
-
-        MeshFilter mf = obj.AddComponent<MeshFilter>();
-        mf.mesh = mesh;
-        obj.AddComponent<MeshRenderer>().material = original.GetComponent<MeshRenderer>().material;
-        obj.AddComponent<MeshCollider>().sharedMesh = mesh;
-
-        return obj;
-    }
-
-    private void ProcessTriangleSplit(int v0, int v1, int v2, bool above0, bool above1, bool above2,
-                                             Vector3[] vertices, Plane cuttingPlane,
-                                             List<Vector3> upperVertices, List<Vector3> lowerVertices,
-                                             List<int> upperTriangles, List<int> lowerTriangles,
-                                             Dictionary<Edge, Vector3> intersectionPoints)
-    {
-        Vector3 aboveVertex, belowVertex1, belowVertex2;
-        bool case1 = (above0 && !above1 && !above2);
-        bool case2 = (above1 && !above0 && !above2);
-        bool case3 = (above2 && !above0 && !above1);
-
-        if (case1)
-        {
-            aboveVertex = vertices[v0];
-            belowVertex1 = vertices[v1];
-            belowVertex2 = vertices[v2];
-        }
-        else if (case2)
-        {
-            aboveVertex = vertices[v1];
-            belowVertex1 = vertices[v0];
-            belowVertex2 = vertices[v2];
-        }
-        else
-        {
-            aboveVertex = vertices[v2];
-            belowVertex1 = vertices[v0];
-            belowVertex2 = vertices[v1];
-        }
-
-        Vector3 intersection1 = GetIntersectionPoint(aboveVertex, belowVertex1, cuttingPlane);
-        Vector3 intersection2 = GetIntersectionPoint(aboveVertex, belowVertex2, cuttingPlane);
-
-        intersectionPoints[new Edge(belowVertex1, aboveVertex)] = intersection1;
-        intersectionPoints[new Edge(belowVertex2, aboveVertex)] = intersection2;
-
-        int aboveIndex = upperVertices.IndexOf(aboveVertex);
-        int belowIndex1 = lowerVertices.IndexOf(belowVertex1);
-        int belowIndex2 = lowerVertices.IndexOf(belowVertex2);
-
-        int intIndex1U = upperVertices.Count;
-        int intIndex2U = upperVertices.Count + 1;
-        int intIndex1L = lowerVertices.Count;
-        int intIndex2L = lowerVertices.Count + 1;
-
-        upperVertices.Add(intersection1);
-        upperVertices.Add(intersection2);
-        lowerVertices.Add(intersection1);
-        lowerVertices.Add(intersection2);
-
-        upperTriangles.AddRange(new int[] { aboveIndex, intIndex1U, intIndex2U });
-        lowerTriangles.AddRange(new int[] { belowIndex1, belowIndex2, intIndex1L, intIndex2L });
-    }
-
-    private static Vector3 GetIntersectionPoint(Vector3 v1, Vector3 v2, Plane plane)
-    {
-        Ray edgeRay = new Ray(v1, v2 - v1);
-        plane.Raycast(edgeRay, out float distance);
-        return edgeRay.GetPoint(distance);
-    }
-
-    private struct Edge
-    {
-        public Vector3 v1, v2;
-        public Edge(Vector3 a, Vector3 b)
-        {
-            v1 = a;
-            v2 = b;
-        }
     }
 
     float checkInsideHCAL(float etaECAL, float phiECAL, List<float> etaHCAL, List<float> phiHCAL, List<float> energyHCAL, List<DataEntry> dataEntries) // checks if ECAL box is inside HCAL box and returns height
@@ -1717,7 +1399,7 @@ public void jetToggleChanged()
         (float, float) hcalSeg;
         float hcalBoxGranularityEta;
         float hcalBoxGranularityPhi;
-        for (int i = etaHCAL.Count-1; i >= 0; i--)
+        for (int i = etaHCAL.Count - 1; i >= 0; i--)
         {
             hcalSeg = returnHCALsegmentation(etaHCAL[i] / scalerX, dataEntries);
             hcalBoxGranularityEta = hcalSeg.Item1 * scalerX; // scales the segmentation
