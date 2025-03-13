@@ -10,6 +10,9 @@
 	<uses-permission android:name="com.oculus.permission.USE_SCENE"/>
 	<uses-permission android:name="com.oculus.permission.BOUNDARY_VISIBILITY"/>
 	<uses-permission android:name="com.oculus.permission.USE_COLOCATION_DISCOVERY_API"/>
+	<uses-permission android:name="com.oculus.permission.FACE_TRACKING" />
+	<uses-permission android:name="com.oculus.permission.EYE_TRACKING"/>
+
 
 	<uses-feature android:name="com.oculus.software.body_tracking" android:required="true"/>
 	<uses-feature android:name="com.oculus.feature.PASSTHROUGH" android:required="true"/>

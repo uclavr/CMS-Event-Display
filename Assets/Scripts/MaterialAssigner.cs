@@ -130,41 +130,10 @@ public class MaterialAssigner : MonoBehaviour
                 {
                     case "SecondaryVertices_V1":
                         item.GetComponent<MeshRenderer>().material = secondaryVertexMaterial;
-                        JToken json = totalJson["secondaryVertexDatas"][indexer];
-                        VertexComponent component = item.AddComponent<VertexComponent>();
-
-                        component.isValid = json["isValid"].Value<int>();
-                        component.isFake = json["isFake"].Value<int>();
-                        component.position = json["pos"].ToObject<double[]>();
-                        component.xError = json["xError"].Value<double>();
-                        component.yError = json["yError"].Value<double>();
-                        component.zError = json["zError"].Value<double>();
-                        component.chi2 = json["chi2"].Value<double>();
-                        component.ndof = json["ndof"].Value<double>();
-
-                        vertexObjects.Add(item);
-                        indexer++;
                         break;
 
                     case "PrimaryVertices_V1":
                         item.GetComponent<MeshRenderer>().material = vertexMaterial;
-                        VertexComponent component = item.AddComponent<VertexComponent>();
-
-                        JToken json = totalJson["primaryVertexDatas"][indexer];
-
-                        component.isValid = json["isValid"].Value<int>();
-                        component.isFake = json["isFake"].Value<int>();
-                        component.position = json["pos"].ToObject<double[]>();
-                        component.xError = json["xError"].Value<double>();
-                        component.yError = json["yError"].Value<double>();
-                        component.zError = json["zError"].Value<double>();
-                        component.chi2 = json["chi2"].Value<double>();
-                        component.ndof = json["ndof"].Value<double>();
-
-                        GameObject locatingsphere = Instantiate(LocatingSpherePrefab, new Vector3((float)component.position[0], (float)(component.position[1]), (float)(component.position[2])), Quaternion.identity);
-
-                        vertexObjects.Add(item);
-                        indexer++;
                         break;
 
                     case "PFJets_V2":

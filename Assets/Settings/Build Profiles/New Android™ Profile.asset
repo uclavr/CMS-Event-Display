@@ -163,7 +163,7 @@ MonoBehaviour:
     - line: '|   loadStoreDebugModeEnabled: 0'
     - line: '|   visionOSBundleVersion: 1.0'
     - line: '|   tvOSBundleVersion: 1.0'
-    - line: '|   bundleVersion: 2.1'
+    - line: '|   bundleVersion: 2.1.1'
     - line: '|   preloadedAssets:'
     - line: '|   - {instanceID: 0}'
     - line: '|   - {instanceID: 0}'
@@ -220,14 +220,6 @@ MonoBehaviour:
     - line: '|   - {instanceID: 0}'
     - line: '|   - {instanceID: 0}'
     - line: '|   - {instanceID: 0}'
-    - line: '|   - {fileID: 11400000, guid: 54228ffbe6b9e0940a95907b380e5fda, type:
-        2}'
-    - line: '|   - {fileID: -8196854396901781169, guid: 1a4c68ca72a83449f938d669337cb305,
-        type: 2}'
-    - line: '|   - {fileID: 11400000, guid: bfa1182bd221b4ca89619141f66f1260, type:
-        2}'
-    - line: '|   - {fileID: -2552712512461709382, guid: a9a6963505ddf7f4d886008c6dc86122,
-        type: 2}'
     - line: '|   metroInputSource: 0'
     - line: '|   wsaTransparentSwapchain: 0'
     - line: '|   m_HolographicPauseOnTrackingLoss: 1'
@@ -257,9 +249,9 @@ MonoBehaviour:
     - line: '|     iPhone: 0'
     - line: '|     tvOS: 0'
     - line: '|   overrideDefaultApplicationIdentifier: 1'
-    - line: '|   AndroidBundleVersionCode: 5'
-    - line: '|   AndroidMinSdkVersion: 32'
-    - line: '|   AndroidTargetSdkVersion: 0'
+    - line: '|   AndroidBundleVersionCode: 6'
+    - line: '|   AndroidMinSdkVersion: 30'
+    - line: '|   AndroidTargetSdkVersion: 32'
     - line: '|   AndroidPreferredInstallLocation: 0'
     - line: '|   aotOptions: '
     - line: '|   stripEngineCode: 1'
