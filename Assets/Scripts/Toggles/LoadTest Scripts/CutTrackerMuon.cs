@@ -10,6 +10,7 @@ namespace CutFeatureObjects
         protected override void Start()
         {
             if (loader.GetComponent<fileLoad>() != null) gameObjects = loader.GetComponent<fileLoad>().trackerMuonObjects;
+            else if (loader.GetComponent<fileLoadMultiple>() != null) gameObjects = loader.GetComponent<fileLoadMultiple>().trackerMuonObjects;
             else if (loader.GetComponent<DefaultDataLoad>() != null) gameObjects = loader.GetComponent<DefaultDataLoad>().trackerMuonObjects;
             else if (loader.GetComponent<BJetDataLoad>() != null) gameObjects = loader.GetComponent<BJetDataLoad>().trackerMuonObjects;
             else if (loader.GetComponent<FourMDataLoad>() != null) gameObjects = loader.GetComponent<FourMDataLoad>().trackerMuonObjects;

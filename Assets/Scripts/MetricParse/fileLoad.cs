@@ -88,7 +88,7 @@ public class fileLoad : MonoBehaviour
         Material matchingcscsMaterial = Resources.Load<Material>("CSCs Material");
         Material trackingrechitsMaterial = Resources.Load<Material>("Tracking Rec Hits Material");
         Material calotowerMaterial = Resources.Load<Material>("Calo Tower Material");
-        
+
         string[] paths = {"DTRecHits_V1.obj", "DTRecSegment4D_V1.obj","CSCRecHit2Ds_V2.obj","CaloTowers_V2", "MatchingCSCs_V1.obj","CSCSegments_V2.obj","PFJets.obj","PFJets_V2.obj","TrackDets_V1.obj","TrackingRecHits_V1.obj","SiPixelClusters_V1.obj","SiStripClusters_V1.obj","EBRecHits_V2.obj","EERecHits_V2.obj", "ESRecHits_V2.obj", "RPCRecHits_V1.obj","CSCSegments_V1.obj",
                 "GsfElectrons_V1.obj","GsfElectrons_V2.obj","GsfElectrons_V3.obj","HBRecHits_V2.obj","HERecHits_V2.obj","HFRecHits_V2.obj",
                 "HORecHits_V2.obj","MuonChambers_V1.obj","TrackerMuons_V1.obj","TrackerMuons_V2.obj","GlobalMuons_V1.obj", "GlobalMuons_V2.obj",
@@ -127,16 +127,17 @@ public class fileLoad : MonoBehaviour
                         METItem.px = metJson["px"].Value<double>();
                         METItem.py = metJson["py"].Value<double>();
                         METItem.pz = metJson["pz"].Value<double>();
-                        
+
                         objectsLoaded.Add(METObject);
                     }
                 }
             }
 
             catch (Exception e) { }
-                foreach (var path in paths)
+            foreach (var path in paths)
+            {
+                try
                 {
-                try { 
                     indexer = 0;
                     //Check that the obj file actually contains any data
                     FileInfo f;
@@ -152,7 +153,8 @@ public class fileLoad : MonoBehaviour
 
                         loadedObject = new OBJLoader().Load($"{objpath}{path}");
                     }
-                    catch (Exception e) {
+                    catch (Exception e)
+                    {
                         continue;
                     }
 
@@ -161,10 +163,9 @@ public class fileLoad : MonoBehaviour
                     loadedObject.name = name;
                     allObjects.Add(loadedObject);
 
-
                     GameObject child = loadedObject.transform.GetChild(0).gameObject;
                     List<GameObject> children = AllChilds(loadedObject);
-                    foreach(var item in children)
+                    foreach (var item in children)
                     {
                         item.AddComponent<MeshCollider>();
                         item.AddComponent<hoverOBJ>();
@@ -328,7 +329,8 @@ public class fileLoad : MonoBehaviour
                                 indexer++;
                             }
                             break;
-                        case "StandaloneMuons_V1.obj": case "StandaloneMuons_V2.obj":
+                        case "StandaloneMuons_V1.obj":
+                        case "StandaloneMuons_V2.obj":
                             foreach (var item in children)
                             {
                                 item.GetComponent<MeshRenderer>().material = muonMaterial;
@@ -411,7 +413,7 @@ public class fileLoad : MonoBehaviour
                         case "Photons_V1.obj":
                             child.GetComponent<MeshRenderer>().material = emMaterial; break;
                         case "RPCRecHits_V1.obj":
-                            foreach(var item in children)
+                            foreach (var item in children)
                             {
                                 item.GetComponent<MeshRenderer>().material = trackMaterial;
                             }
@@ -580,7 +582,8 @@ public class fileLoad : MonoBehaviour
                         default: break;
                     }
                     objectsLoaded.Add(loadedObject);
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     continue;
                 }
@@ -589,7 +592,7 @@ public class fileLoad : MonoBehaviour
         //Code that runs in editor
         else
         {
-           
+
             jsonpath = @"C:\Users\uclav\Downloads\IGDATA\json_data_files\totaldata(masterclass139707779).json";
             //metpath = @"C:\Users\uclav\Desktop\Event_1096322990\METData.json";
             //metpath = @"C:\Users\uclav\Desktop\Event_1096322990\METData.json";
@@ -646,8 +649,10 @@ public class fileLoad : MonoBehaviour
             }*/
 
 
-            foreach (var path in paths) {
-                try {
+            foreach (var path in paths)
+            {
+                try
+                {
                     indexer = 0;
 
                     FileInfo f;
@@ -667,8 +672,8 @@ public class fileLoad : MonoBehaviour
 
                     GameObject child = loadedObject.transform.GetChild(0).gameObject;
                     List<GameObject> children = AllChilds(loadedObject);
-                    foreach(var item in children)
-                    {           
+                    foreach (var item in children)
+                    {
                         item.AddComponent<MeshCollider>();
                         item.AddComponent<hoverOBJ>();
                         item.AddComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable>();
@@ -994,7 +999,7 @@ public class fileLoad : MonoBehaviour
                             }
                             break;
                         case "MatchingCSCs_V1.obj":
-                            Color mcscsColor = new Color(255 / 255f, 0 / 255f, 0 / 255f, 25/255f); //#ff0000
+                            Color mcscsColor = new Color(255 / 255f, 0 / 255f, 0 / 255f, 25 / 255f); //#ff0000
                             foreach (var item in children)
                             {
                                 item.GetComponent<MeshRenderer>().material = matchingcscsMaterial;
@@ -1023,10 +1028,10 @@ public class fileLoad : MonoBehaviour
                         default: break;
                     }
                     objectsLoaded.Add(loadedObject);
-                } 
-                
-            catch (Exception ex) { }
-            } 
+                }
+
+                catch (Exception ex) { }
+            }
         }
     }
     private List<GameObject> AllChilds(GameObject root)

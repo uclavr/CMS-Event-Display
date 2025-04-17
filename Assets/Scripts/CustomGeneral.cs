@@ -8,7 +8,11 @@ using System.Net;
 public class CustomGeneral : MonoBehaviour
 {
     // Start is called before the first frame update
+    public List<GameObject> eventObjects;
+    private int eventIndex;
+    private GameObject eventObject;
     public List<GameObject> sceneObjects;
+    public fileLoadMultiple loader;
     public TMP_Text textComponent;
     private bool state;
     private int index1;
@@ -25,6 +29,8 @@ public class CustomGeneral : MonoBehaviour
     public bool threeState;
     public bool fourState;
     public bool indexState;
+    public static int selectionFlag = 1; // start with 1 for this because we dont need to trigger the initial case
+
     void Start()
     {
         secondaryHandState = false;
@@ -36,9 +42,11 @@ public class CustomGeneral : MonoBehaviour
         state = true;
         index1 = 0;
         index2 = 0;
-        sceneObjects = GameObject.Find("Loader").GetComponent<fileLoad>().allObjects;
-        print("length of sceneobjects: "+sceneObjects.Count);
-        UnityEngine.Debug.Log(sceneObjects[index1].name);
+        //sceneObjects = GameObject.Find("Loader").GetComponent<fileLoad>().allObjects;
+        eventObjects = GameObject.Find("Loader").GetComponent<fileLoadMultiple>().allObjects;
+        eventIndex = loader.getCurrentEvent();
+        eventObject = eventObjects[eventIndex];
+        sceneObjects = DirectChildren(eventObject);
         textComponent.text = $"Selected Item: {sceneObjects[index1].name}\nActive: {sceneObjects[index1].activeSelf}";
     }
     private List<GameObject> AllChilds(GameObject root)
@@ -65,6 +73,17 @@ public class CustomGeneral : MonoBehaviour
             }
         }
     }
+
+    private List<GameObject> DirectChildren(GameObject parent)
+    {
+        List<GameObject> children = new List<GameObject>();
+        foreach (Transform child in parent.transform)
+        {
+            children.Add(child.gameObject);
+        }
+        return children;
+    }
+
     private string GetDataFromPhysicsObject(string name, int index2)
     {
         string dataString;
@@ -74,6 +93,7 @@ public class CustomGeneral : MonoBehaviour
                 dataString = this.subObjects[index2].GetComponent<METComponent>().GetData();
                 break;
             case "PFJets":
+            case "PFJets_V2": //NATHAN ADDED
                 dataString = this.subObjects[index2].GetComponent<JetComponent>().GetData();
                 break;
             case "EBRecHits":
@@ -132,7 +152,13 @@ public class CustomGeneral : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (selectionFlag == 0)
+        {
+            eventIndex = loader.getCurrentEvent();
+            eventObject = eventObjects[eventIndex];
+            sceneObjects = DirectChildren(eventObject);
+            selectionFlag = 1;
+        }
         OVRInput.Update();
         if (OVRInput.Get(OVRInput.Button.Two))
         {

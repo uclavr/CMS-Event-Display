@@ -18,6 +18,7 @@ namespace CutFeatureObjects
         protected override void Start()
         {
             if (loader.GetComponent<fileLoad>() != null) gameObjects = loader.GetComponent<fileLoad>().superClusterObjects;
+            else if (loader.GetComponent<fileLoadMultiple>() != null) gameObjects = loader.GetComponent<fileLoadMultiple>().superClusterObjects;
 
             foreach (var gameObject in gameObjects)
             {

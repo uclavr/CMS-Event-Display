@@ -41,6 +41,9 @@ public class LegoPlotter : MonoBehaviour
     private const float axisOffset = 0.2f;
     bool[] isPlotGeneratedFor = new bool[3] { true, false, false };
     public GameObject cubeboi;
+    public fileLoadMultiple loader;
+    public int eventIndex;
+    public static int eventFlag = 1; // start with 1 for this because we dont need to trigger the initial case
 
     // Start is called before the first frame update
     void Start()
@@ -50,8 +53,50 @@ public class LegoPlotter : MonoBehaviour
 
     void Update()
     {
-        // Making the axis labels and ticks look at you always
+        if (eventFlag == 0)
+        {
+            eventIndex = loader.getCurrentEvent();
+            jsonFile = loader.getJson(eventIndex);
+            string jsonString = jsonFile.ToString();
+            jsonText = new TextAsset(jsonString);
 
+            if (isPlotGeneratedFor[0] == true)
+            {
+                if (isJetToggleOn)
+                {
+                    GenerateLegoPlot(1, true);
+                }
+                else
+                {
+                    GenerateLegoPlot(1, false);
+                }
+            }
+            else if (isPlotGeneratedFor[1] == true)
+            {
+                if (isJetToggleOn)
+                {
+                    GenerateLegoPlot(2, true);
+                }
+                else
+                {
+                    GenerateLegoPlot(2, false);
+                }
+            }
+            else if (isPlotGeneratedFor[2] == true)
+            {
+                if (isJetToggleOn)
+                {
+                    GenerateLegoPlot(3, true);
+                }
+                else
+                {
+                    GenerateLegoPlot(3, false);
+                }
+            }
+            eventFlag = 1;
+        }
+
+        // Making the axis labels and ticks look at you always
         if (GameObject.FindGameObjectsWithTag("AngleUpdate") != null)
         {
             GameObject[] gos = GameObject.FindGameObjectsWithTag("AngleUpdate");
@@ -147,16 +192,20 @@ public class LegoPlotter : MonoBehaviour
         }
         else
         {
-            print("load no good :(");
-            jsonpath = @"C:\Users\uclav\Desktop\andrew\totaldata(masterclass139707779).json";
-            print(jsonpath);
-            using (StreamReader file = File.OpenText(jsonpath))
-            using (JsonTextReader reader = new JsonTextReader(file))
-            {
-                jsonFile = (JObject)JToken.ReadFrom(reader);
-                string jsonString = jsonFile.ToString();
-                jsonText = new TextAsset(jsonString);
-            }
+            //print("load no good :(");
+            //jsonpath = @"C:\Users\uclav\Desktop\andrew\totaldata(masterclass139707779).json";
+            //print(jsonpath);
+            //using (StreamReader file = File.OpenText(jsonpath))
+            //using (JsonTextReader reader = new JsonTextReader(file))
+            //{
+            //    jsonFile = (JObject)JToken.ReadFrom(reader);
+            //    string jsonString = jsonFile.ToString();
+            //    jsonText = new TextAsset(jsonString);
+            //}
+            eventIndex = loader.getCurrentEvent();
+            jsonFile = loader.getJson(eventIndex);
+            string jsonString = jsonFile.ToString();
+            jsonText = new TextAsset(jsonString);
         }
     }
 

@@ -10,6 +10,7 @@ namespace CutFeatureObjects
         protected override void Start()
         {
             if (loader.GetComponent<fileLoad>() != null) gameObjects = loader.GetComponent<fileLoad>().standaloneMuonObjects;
+            else if (loader.GetComponent<fileLoadMultiple>() != null) gameObjects = loader.GetComponent<fileLoadMultiple>().standaloneMuonObjects;
 
             foreach (var gameObject in gameObjects)
             {

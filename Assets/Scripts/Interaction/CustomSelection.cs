@@ -6,7 +6,11 @@ using System.IO;
 
 public class CustomSelection : MonoBehaviour
 {
+    public List<GameObject> eventObjects;
+    private int eventIndex;
+    private GameObject eventObject;
     public List<GameObject> sceneObjects;
+    public fileLoadMultiple loader;
     public TMP_Text textComponent;
     private bool state;
     private int index1;
@@ -14,20 +18,31 @@ public class CustomSelection : MonoBehaviour
     private bool controlState;
     private GameObject currentObject;
     private List<GameObject> subObjects;
+    public static int selectionFlag = 1; // start with 1 for this because we dont need to trigger the initial case
 
     void Start()
     {
         state = true;
         index1 = 0;
         index2 = 0;
-        sceneObjects = GameObject.Find("Loader").GetComponent<fileLoad>().allObjects;
+        //sceneObjects = GameObject.Find("Loader").GetComponent<fileLoad>().allObjects;
+        eventObjects = GameObject.Find("Loader").GetComponent<fileLoadMultiple>().allObjects;
+        eventIndex = loader.getCurrentEvent();
+        eventObject = eventObjects[eventIndex];
+        sceneObjects = DirectChildren(eventObject);
         UnityEngine.Debug.Log(sceneObjects[index1].name);
         textComponent.text = $"Selected Item: {sceneObjects[index1].name}\nActive: {sceneObjects[index1].activeSelf}";
     }
 
     void Update()
     {
-
+        if (selectionFlag == 0)
+        {
+            eventIndex = loader.getCurrentEvent();
+            eventObject = eventObjects[eventIndex];
+            sceneObjects = DirectChildren(eventObject);
+            selectionFlag = 1;
+        }
         OVRInput.Update();
         if (OVRInput.GetDown(OVRInput.Button.SecondaryHandTrigger))
         {
@@ -37,6 +52,7 @@ public class CustomSelection : MonoBehaviour
             {
                 index1 = 0;
             }
+            print(sceneObjects[index1]); //.bruh
             currentObject = sceneObjects[index1];
             state = currentObject.activeSelf;
             textComponent.text = $"Selected Item: {sceneObjects[index1].name}\nActive: {state}\n";
@@ -109,6 +125,16 @@ public class CustomSelection : MonoBehaviour
         return result;
     }
 
+    private List<GameObject> DirectChildren(GameObject parent)
+    {
+        List<GameObject> children = new List<GameObject>();
+        foreach (Transform child in parent.transform)
+        {
+            children.Add(child.gameObject);
+        }
+        return children;
+    }
+
     private void Searcher(List<GameObject> list, GameObject root)
     {
         list.Add(root);
@@ -129,6 +155,7 @@ public class CustomSelection : MonoBehaviour
                 dataString = this.subObjects[index2].GetComponent<METComponent>().GetData();
                 break;
             case "PFJets":
+            case "PFJets_V2": //NATHAN ADDED
                 dataString = this.subObjects[index2].GetComponent<JetComponent>().GetData();
                 break;
             case "EBRecHits":

@@ -12,7 +12,7 @@ public class MetricManager : MonoBehaviour
     {
         GameObject loader = GameObject.Find("Loader");
 
-        jetObjects = loader.GetComponent<fileLoad>().jetObjects;
+        jetObjects = loader.GetComponent<fileLoadMultiple>().jetObjects;
     }
 
     // Update is called once per frame

@@ -10,6 +10,7 @@ namespace CutFeatureObjects
         protected override void Start()
         {
             if (loader.GetComponent<fileLoad>() != null) gameObjects = loader.GetComponent<fileLoad>().electronObjects;
+            else if (loader.GetComponent<fileLoadMultiple>() != null) gameObjects = loader.GetComponent<fileLoadMultiple>().electronObjects;
             else if (loader.GetComponent<DefaultDataLoad>() != null) gameObjects = loader.GetComponent<DefaultDataLoad>().electronObjects;
             else if (loader.GetComponent<BJetDataLoad>() != null) gameObjects = loader.GetComponent<BJetDataLoad>().electronObjects;
             else if (loader.GetComponent<FourMDataLoad>() != null) gameObjects = loader.GetComponent<FourMDataLoad>().electronObjects;
