@@ -220,6 +220,14 @@ MonoBehaviour:
     - line: '|   - {instanceID: 0}'
     - line: '|   - {instanceID: 0}'
     - line: '|   - {instanceID: 0}'
+    - line: '|   - {fileID: 11400000, guid: 54228ffbe6b9e0940a95907b380e5fda, type:
+        2}'
+    - line: '|   - {fileID: -8196854396901781169, guid: 1a4c68ca72a83449f938d669337cb305,
+        type: 2}'
+    - line: '|   - {fileID: 11400000, guid: bfa1182bd221b4ca89619141f66f1260, type:
+        2}'
+    - line: '|   - {fileID: -2552712512461709382, guid: a9a6963505ddf7f4d886008c6dc86122,
+        type: 2}'
     - line: '|   metroInputSource: 0'
     - line: '|   wsaTransparentSwapchain: 0'
     - line: '|   m_HolographicPauseOnTrackingLoss: 1'
@@ -761,7 +769,7 @@ MonoBehaviour:
     - line: '|   il2cppCodeGeneration: {}'
     - line: '|   il2cppStacktraceInformation: {}'
     - line: '|   managedStrippingLevel:'
-    - line: '|     Android: 1'
+    - line: '|     Android: 4'
     - line: '|     EmbeddedLinux: 1'
     - line: '|     GameCoreScarlett: 1'
     - line: '|     GameCoreXboxOne: 1'
@@ -809,7 +817,7 @@ MonoBehaviour:
     - line: '|   metroTileBackgroundColor: {r: 0.13333334, g: 0.17254902, b: 0.21568628,
         a: 0}'
     - line: '|   metroSplashScreenBackgroundColor: {r: 0.12941177, g: 0.17254902,
-        b: 0.21568628,    a: 1}'
+        b: 0.21568628, a: 1}'
     - line: '|   metroSplashScreenUseBackgroundColor: 0'
     - line: '|   syncCapabilities: 0'
     - line: '|   platformCapabilities: {}'

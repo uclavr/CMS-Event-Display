@@ -24,8 +24,43 @@ public class fileLoadMultiple : MonoBehaviour
 {
     //new multi-event stuff
     public int currentEvent = 0;
+    public int subItemIndex = 0;
+    public HashSet<string> dataTypesWithSubitems = new HashSet<string>
+    {
+        "SecondaryVertices_V1",
+        "PrimaryVertices_V1",
+        "Vertices_V1",
+        "PFJets_V2",
+        "PFJets",
+        "TrackerMuons_V1",
+        "TrackerMuons_V2",
+        "GlobalMuons_V1",
+        "GlobalMuons_V2",
+        "StandaloneMuons_V1",
+        "StandaloneMuons_V2",
+        "GsfElectrons_V1",
+        "GsfElectrons_V2",
+        "GsfElectrons_V3",
+        "Tracks_V1",
+        "Tracks_V2",
+        "Tracks_V3",
+        "Tracks_V4",
+        "CSCSegments_V2",
+        "DTRecSegment4D_V1",
+        "DTRecHits_V1",
+        "CSCRecHit2Ds_V2"
+    };
+
+    public List<GameObject> subObjects = new List<GameObject>();
+    public GameObject currentObjectSub;
+    public GameObject currentSubItemPopup = null;
+    public string currentSubItemType = "";
+    private Material currentSubItemMaterial;
+
     public Dictionary<string, bool> activeMap = new Dictionary<string, bool>
     {
+        { "Photons_V1", true },
+        { "Vertices_V1", true },
         { "SecondaryVertices_V1", true },
         { "PrimaryVertices_V1", true },
         { "PFJets_V2", true },
@@ -66,47 +101,49 @@ public class fileLoadMultiple : MonoBehaviour
         { "CaloTowers_V2", true }
     };
     public HashSet<string> dataTypes = new HashSet<string>
-        {
-            "SecondaryVertices_V1",
-            "PrimaryVertices_V1",
-            "PFJets_V2",
-            "PFJets",
-            "TrackerMuons_V1",
-            "TrackerMuons_V2",
-            "GlobalMuons_V1",
-            "GlobalMuons_V2",
-            "StandaloneMuons_V1",
-            "StandaloneMuons_V2",
-            "GsfElectrons_V1",
-            "GsfElectrons_V2",
-            "GsfElectrons_V3",
-            "EERecHits_V2",
-            "EBRecHits_V2",
-            "ESRecHits_V2",
-            "HBRecHits_V2",
-            "HERecHits_V2",
-            "HORecHits_V2",
-            "HFRecHits_V2",
-            "MuonChambers_V1",
-            "RPCRecHits_V1",
-            "Tracks_V1",
-            "Tracks_V2",
-            "Tracks_V3",
-            "Tracks_V4",
-            "SuperClusters_V1",
-            "CSCSegments_V1",
-            "CSCSegments_V2",
-            "TrackDets_V1",
-            "SiPixelClusters_V1",
-            "SiStripClusters_V1",
-            "DTRecHits_V1",
-            "DTRecSegment4D_V1",
-            "CSCRecHit2Ds_V2",
-            "MatchingCSCs_V1",
-            "TrackingRecHits_V1",
-            "CaloTowers_V2"
-        };
-    public List<GameObject> test;
+    {
+        "CaloTowers_V2",
+        "CSCRecHit2Ds_V2",
+        "CSCSegments_V1",
+        "CSCSegments_V2",
+        "DTRecHits_V1",
+        "DTRecSegment4D_V1",
+        "EBRecHits_V2",
+        "EERecHits_V2",
+        "ESRecHits_V2",
+        "GlobalMuons_V1",
+        "GlobalMuons_V2",
+        "GsfElectrons_V1",
+        "GsfElectrons_V2",
+        "GsfElectrons_V3",
+        "HBRecHits_V2",
+        "HERecHits_V2",
+        "HFRecHits_V2",
+        "HORecHits_V2",
+        "MatchingCSCs_V1",
+        "MuonChambers_V1",
+        "PFJets",
+        "PFJets_V2",
+        "Photons_V1",
+        "PrimaryVertices_V1",
+        "RPCRecHits_V1",
+        "SecondaryVertices_V1",
+        "SiPixelClusters_V1",
+        "SiStripClusters_V1",
+        "StandaloneMuons_V1",
+        "StandaloneMuons_V2",
+        "SuperClusters_V1",
+        "TrackDets_V1",
+        "TrackerMuons_V1",
+        "TrackerMuons_V2",
+        "TrackingRecHits_V1",
+        "Tracks_V1",
+        "Tracks_V2",
+        "Tracks_V3",
+        "Tracks_V4",
+        "Vertices_V1"
+    };
+
     string objpath;
     public List<GameObject> objectsLoaded;
     public string[] eventPaths;
@@ -124,6 +161,9 @@ public class fileLoadMultiple : MonoBehaviour
     public List<GameObject> photonObjects;
     public List<GameObject> jetObjects;
     public List<GameObject> vertexObjects;
+    public List<GameObject> dtrecSegmentObjects;
+    public List<GameObject> dtRecHitObjects;
+    public List<GameObject> cscRecHitObjects;
 
     public GameObject detectorCanvas;
     public GameObject locatingSphere;
@@ -157,7 +197,7 @@ public class fileLoadMultiple : MonoBehaviour
     }
     void Awake()
     {
-        objectsLoaded.Add(ECALandMenu);
+        //objectsLoaded.Add(ECALandMenu); // why does this exist??
         Material muonMaterial = Resources.Load<Material>("Muon Track Material");
         Material mMaterial = Resources.Load<Material>("Chamber Material");
         Material vertexMaterial = Resources.Load<Material>("Vertex Material");
@@ -194,6 +234,23 @@ public class fileLoadMultiple : MonoBehaviour
                 int numB = ExtractNumber(b);
                 return numA.CompareTo(numB);
             });
+
+            //move editor to headset stuff for testing 
+            GameObject scrollViewGO = Instantiate(scrollViewPrefab, selectionMenu.transform);
+            RectTransform scrollRect = scrollViewGO.GetComponent<RectTransform>();
+            scrollRect.sizeDelta = new Vector2(scrollRect.sizeDelta.x, 200);
+            Transform eventContent = scrollViewGO.transform.Find("Viewport/Content");
+            RectTransform eventContentRect = eventContent.GetComponent<RectTransform>();
+            float eventButtonSpacingY = 51f;
+            float eventContentHeight = 552;//eventPaths.Length * eventButtonSpacingY;
+            eventContentRect.sizeDelta = new Vector2(eventContentRect.sizeDelta.x, eventContentHeight);
+
+            Transform content = scrollViewGO.transform.Find("Viewport/Content/Organizer");
+            float eventButtonYpos = 223; //scrollview
+            int eventIterator = 0;
+
+
+
             foreach (string eventPath in eventPaths)
             {
                 string eventName = Path.GetFileName(eventPath);
@@ -229,6 +286,81 @@ public class fileLoadMultiple : MonoBehaviour
                     print("An unexpected error occurred.");
                     print(ex.Message);
                 }
+
+
+                //editor to headset 
+                if (eventIterator > 0)
+                {
+                    eventObject.SetActive(false);
+                }
+
+                GameObject eventButton = new GameObject(Path.GetFileName(eventPath) + "Button", typeof(RectTransform), typeof(CanvasRenderer), typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Button));
+                UnityEngine.UI.Image eventButtonImage = eventButton.GetComponent<UnityEngine.UI.Image>();
+                if (eventIterator == 0)
+                {
+                    eventButtonImage.color = new Color(0.290f, 0.816f, 1f, 1f);
+                }
+                else
+                {
+                    eventButtonImage.color = new Color(0.745f, 0.745f, 0.745f, 1f);
+                }
+                eventButton.transform.SetParent(content, false);
+                UnityEngine.UI.Outline outline = eventButton.AddComponent<UnityEngine.UI.Outline>();
+                outline.effectColor = Color.black;
+                RectTransform eventButtonRect = eventButton.GetComponent<RectTransform>();
+                eventButtonRect.sizeDelta = new Vector2(680, 50);
+                eventButtonRect.anchoredPosition = new Vector2(0, eventButtonYpos - eventIterator * eventButtonSpacingY);
+                eventIterator += 1;
+                eventButton.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
+                {
+                    for (int i = 0; i < allObjects.Count; i++)
+                    {
+                        GameObject child = allObjects[i];
+                        UnityEngine.UI.Image eventButtonImage = content.GetChild(i).GetComponent<UnityEngine.UI.Image>();  // Accounting for Lambda closure issue
+                        if (child == eventObject)
+                        {
+                            eventButtonImage.color = new Color(0.290f, 0.816f, 1f, 1f);
+                            child.SetActive(true);
+                            currentEvent = i; //sets current event to the index... indexed by allObjects 
+                        }
+                        else
+                        {
+                            eventButtonImage.color = new Color(0.745f, 0.745f, 0.745f, 1f);
+                            child.SetActive(false);
+                        }
+                    }
+                    try
+                    {
+                        currentObjectSub = null;
+                        currentSubItemType = "";
+                        subItemIndex = 0;
+                        subObjects.Clear();
+                        if (currentSubItemPopup != null)
+                        {
+                            Destroy(currentSubItemPopup);
+                            currentSubItemPopup = null;
+                        }
+                        makeDataButtons();
+                    }
+                    catch (Exception ex)
+                    {
+                        print(ex.Message);
+                    }
+                    ResetStaticVariables reset = new ResetStaticVariables();
+                    reset.ResetStatics();
+                });
+
+                GameObject textObj = new GameObject("Text (TMP)", typeof(RectTransform), typeof(TextMeshProUGUI));
+                textObj.transform.SetParent(eventButton.transform, false);
+                RectTransform textObjRect = textObj.GetComponent<RectTransform>();
+                textObjRect.sizeDelta = new Vector2(600, 50);
+                TextMeshProUGUI tmp = textObj.GetComponent<TextMeshProUGUI>();
+                //tmp.text = Path.GetFileName(eventPath);
+                tmp.text = eventPath.Substring(eventPath.IndexOf("obj_files\\") + "obj_files\\".Length); ;
+                tmp.alignment = TextAlignmentOptions.Left;
+                tmp.fontSize = 32;
+                tmp.color = Color.white;
+                tmp.raycastTarget = false;
 
                 foreach (var path in paths)
                 {
@@ -268,6 +400,8 @@ public class fileLoadMultiple : MonoBehaviour
                             item.name = name;
                             print($"fileload{item.name}");
                         }
+
+
                         //Handle the materials based on the items
                         switch (path)
                         {
@@ -462,7 +596,6 @@ public class fileLoadMultiple : MonoBehaviour
                                     component.phi = jsonValues["phi"].Value<double>();
                                     component.eta = jsonValues["eta"].Value<double>();
                                     component.direction = jsonValues["dir"].ToObject<double[]>();
-
                                     electronObjects.Add(item);
                                     indexer++;
                                 }
@@ -503,14 +636,13 @@ public class fileLoadMultiple : MonoBehaviour
                                     //if (Mathf.Acos((Vector3.))) { }
                                 }*/
                                 foreach (var item in children) { item.GetComponent<MeshRenderer>().material = mMaterial; }
-
                                 break;
                             case "Photons_V1.obj":
                                 child.GetComponent<MeshRenderer>().material = emMaterial; break;
                             case "RPCRecHits_V1.obj":
                                 foreach (var item in children)
                                 {
-                                    item.GetComponent<MeshRenderer>().material = trackMaterial;
+                                    item.GetComponent<MeshRenderer>().material = rpcMaterial;
                                 }
                                 indexer++;
                                 break;
@@ -584,12 +716,34 @@ public class fileLoadMultiple : MonoBehaviour
                                 }
                                 break;
                             case "CSCSegments_V1.obj":
-                            case "CSCSegments_V2.obj":
                                 Color cscColor = new Color(255 / 255f, 153 / 255f, 229 / 255f); //#ff99ff
                                 foreach (var item in children)
                                 {
                                     child.GetComponent<MeshRenderer>().material = cscMaterial;
                                     item.GetComponent<MeshRenderer>().material.color = cscColor;
+                                    indexer++;
+                                }
+                                break;
+                            case "CSCSegments_V2.obj":
+                                cscColor = new Color(255 / 255f, 153 / 255f, 229 / 255f); //#ff99ff
+                                foreach (var item in children)
+                                {
+                                    child.GetComponent<MeshRenderer>().material = cscMaterial;
+                                    item.GetComponent<MeshRenderer>().material.color = cscColor;
+                                    CSCSegmentComponent component = item.AddComponent<CSCSegmentComponent>();
+
+                                    JToken json = totalJson["CSCSegments_V2"][indexer];
+
+                                    component.detid = json["detid"].Value<int>();
+                                    component.pos_1 = json["pos_1"].ToObject<double[]>();
+                                    component.pos_2 = json["pos_2"].ToObject<double[]>();
+                                    component.endcap = json["endcap"].Value<int>();
+                                    component.station = json["station"].Value<int>();
+                                    component.ring = json["ring"].Value<int>();
+                                    component.chamber = json["chamber"].Value<int>();
+                                    component.layer = json["layer"].Value<int>();
+
+                                    cscSegmentObjects.Add(item);
                                     indexer++;
                                 }
                                 break;
@@ -624,26 +778,88 @@ public class fileLoadMultiple : MonoBehaviour
                                 Color dtrColor = new Color(0 / 255f, 255 / 255f, 0 / 255f); //#00ff00
                                 foreach (var item in children)
                                 {
-                                    child.GetComponent<MeshRenderer>().material = dtrechitMaterial;
+                                    item.GetComponent<MeshRenderer>().material = dtrechitMaterial;
                                     item.GetComponent<MeshRenderer>().material.color = dtrColor;
+
+                                    DTRecHitComponent component = item.AddComponent<DTRecHitComponent>();
+                                    var json = totalJson["DTRecHits_V1Data"][indexer];
+
+                                    component.wireId = json["wireId"].Value<int>();
+                                    component.layerId = json["layerId"].Value<int>();
+                                    component.superLayerId = json["superLayerId"].Value<int>();
+                                    component.sectorId = json["sectorId"].Value<int>();
+                                    component.stationId = json["stationId"].Value<int>();
+                                    component.wheelId = json["wheelId"].Value<int>();
+                                    component.digitime = json["digitime"].Value<double>();
+
+                                    component.wirePos = json["wirePos"].ToObject<double[]>();
+                                    component.lPlusGlobalPos = json["lPlusGlobalPos"].ToObject<double[]>();
+                                    component.lMinusGlobalPos = json["lMinusGlobalPos"].ToObject<double[]>();
+                                    component.rPlusGlobalPos = json["rPlusGlobalPos"].ToObject<double[]>();
+                                    component.rMinusGlobalPos = json["rMinusGlobalPos"].ToObject<double[]>();
+                                    component.lGlobalPos = json["lGlobalPos"].ToObject<double[]>();
+                                    component.rGlobalPos = json["rGlobalPos"].ToObject<double[]>();
+                                    component.axis = json["axis"].ToObject<double[]>();
+                                    component.angle = json["angle"].Value<double>();
+                                    component.cellWidth = json["cellWidth"].Value<double>();
+                                    component.cellLength = json["cellLength"].Value<double>();
+                                    component.cellHeight = json["cellHeight"].Value<double>();
+
+                                    dtRecHitObjects.Add(item); // Add to list
                                     indexer++;
                                 }
                                 break;
                             case "DTRecSegment4D_V1.obj":
-                                Color dtrsColor = new Color(255 / 255f, 255 / 255f, 0 / 255f); //#ffff00
+                                Color dtrsColor = new Color(255 / 255f, 255 / 255f, 0 / 255f); // #ffff00
                                 foreach (var item in children)
                                 {
-                                    child.GetComponent<MeshRenderer>().material = dtrecsegmentMaterial;
+                                    item.GetComponent<MeshRenderer>().material = dtrecsegmentMaterial;
                                     item.GetComponent<MeshRenderer>().material.color = dtrsColor;
+
+                                    DTRecSegmentComponent component = item.AddComponent<DTRecSegmentComponent>();
+                                    JToken json = totalJson["DTRecSegment4D_V1Data"][indexer];
+
+                                    component.detid = json["detid"].Value<int>();
+                                    component.pos_1 = json["pos_1"].ToObject<double[]>();
+                                    component.pos_2 = json["pos_2"].ToObject<double[]>();
+                                    component.sectorId = json["sectorId"].Value<int>();
+                                    component.stationId = json["stationId"].Value<int>();
+                                    component.wheelId = json["wheelId"].Value<int>();
+                                    dtrecSegmentObjects.Add(item);
                                     indexer++;
                                 }
                                 break;
                             case "CSCRecHit2Ds_V2.obj":
-                                Color cscrhColor = new Color(153 / 255f, 255 / 255f, 229 / 255f); //#99ffe5
+                                Color cscrhColor = new Color(153 / 255f, 255 / 255f, 229 / 255f); // #99ffe5
                                 foreach (var item in children)
                                 {
                                     item.GetComponent<MeshRenderer>().material = cscrechitMaterial;
                                     item.GetComponent<MeshRenderer>().material.color = cscrhColor;
+
+                                    CSCRecHitComponent component = item.AddComponent<CSCRecHitComponent>();
+                                    var json = totalJson["CSCRecSegments2DsV2Datas"][indexer];
+
+                                    component.u1 = json["u1"].ToObject<double[]>();
+                                    component.u2 = json["u2"].ToObject<double[]>();
+                                    component.v1 = json["v1"].ToObject<double[]>();
+                                    component.v2 = json["v2"].ToObject<double[]>();
+                                    component.w1 = json["w1"].ToObject<double[]>();
+                                    component.w2 = json["w2"].ToObject<double[]>();
+
+                                    component.endcap = json["endcap"].Value<int>();
+                                    component.station = json["station"].Value<int>();
+                                    component.ring = json["ring"].Value<int>();
+                                    component.chamber = json["chamber"].Value<int>();
+                                    component.layer = json["layer"].Value<int>();
+
+                                    component.tpeak = json["tpeak"].Value<double>();
+                                    component.positionWithinStrip = json["positionWithinStrip"].Value<double>();
+                                    component.errorWithinStrip = json["errorWithinStrip"].Value<double>();
+
+                                    component.strips = json["strips"].Value<string>();
+                                    component.wireGroups = json["WireGroups"].Value<string>();
+
+                                    cscRecHitObjects.Add(item);
                                     indexer++;
                                 }
                                 break;
@@ -683,6 +899,14 @@ public class fileLoadMultiple : MonoBehaviour
                         continue;
                     }
                 }
+                try
+                {
+                    makeDataButtons();
+                }
+                catch (Exception ex)
+                {
+                    print(ex.Message);
+                }
 
             }
 
@@ -721,7 +945,8 @@ public class fileLoadMultiple : MonoBehaviour
         //Code that runs in editor
         else
         {
-            objpath = @"C:\Users\uclav\Downloads\IGDATA\obj_files\SphaleronRECO_multi";
+            //objpath = @"C:\Users\uclav\Downloads\IGDATA\obj_files\SphaleronRECO";
+            objpath = @"C:\Users\uclav\Downloads\IGDATA\obj_files\masterclass_11_test";
             eventPaths = Directory.GetDirectories(objpath);
             Array.Sort(eventPaths, (a, b) =>
             {
@@ -731,10 +956,25 @@ public class fileLoadMultiple : MonoBehaviour
             }); 
             // Creating the scrollable list of events
             GameObject scrollViewGO = Instantiate(scrollViewPrefab, selectionMenu.transform);
-            Transform content = scrollViewGO.transform.Find("Viewport/Content/Organizer");
-            float eventButtonYpos = 123f; //scrollview
-            int eventIterator = 0;
+            RectTransform scrollRect = scrollViewGO.GetComponent<RectTransform>();
+            //scrollRect.Transform.position = new Vector3(scrollRect.Transform.x, scrollRect.Transform., scrollRect.Transform.z);
+            scrollRect.sizeDelta = new Vector2(scrollRect.sizeDelta.x, 200);
+
+            //RectTransform rectTransformData = currentScrollViewData.GetComponent<RectTransform>();
+            //Vector2 newPosData = rectTransformData.anchoredPosition;
+            //newPosData.x = -37f;
+            //newPosData.y = 2f; // nathan added
+            //rectTransformData.anchoredPosition = newPosData;
+
+            Transform eventContent = scrollViewGO.transform.Find("Viewport/Content");
+            RectTransform eventContentRect = eventContent.GetComponent<RectTransform>();
             float eventButtonSpacingY = 51f;
+            float eventContentHeight = 552;//eventPaths.Length * eventButtonSpacingY;
+            eventContentRect.sizeDelta = new Vector2(eventContentRect.sizeDelta.x, eventContentHeight);
+
+            Transform content = scrollViewGO.transform.Find("Viewport/Content/Organizer");
+            float eventButtonYpos = 223; //scrollview
+            int eventIterator = 0;
 
             //GameObject scrollViewData = Instantiate(scrollViewPrefab, selectionMenu.transform);
             //RectTransform rectTransformData = scrollViewData.GetComponent<RectTransform>();
@@ -802,20 +1042,11 @@ public class fileLoadMultiple : MonoBehaviour
                 UnityEngine.UI.Outline outline = eventButton.AddComponent<UnityEngine.UI.Outline>();
                 outline.effectColor = Color.black;
                 RectTransform eventButtonRect = eventButton.GetComponent<RectTransform>();
-                eventButtonRect.sizeDelta = new Vector2(650, 50);
+                eventButtonRect.sizeDelta = new Vector2(680, 50);
                 eventButtonRect.anchoredPosition = new Vector2(0, eventButtonYpos - eventIterator * eventButtonSpacingY);
                 eventIterator += 1;
                 eventButton.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
                 {
-                    try
-                    {
-                        makeDataButtons();
-                    }
-                    catch (Exception ex)
-                    {
-                        print(ex.Message);
-                    }
-
                     for (int i = 0; i < allObjects.Count; i++)
                     {
                         GameObject child = allObjects[i];
@@ -832,6 +1063,23 @@ public class fileLoadMultiple : MonoBehaviour
                             child.SetActive(false);
                         }
                     }
+                    try
+                    {
+                        currentObjectSub = null;
+                        currentSubItemType = "";
+                        subItemIndex = 0;
+                        subObjects.Clear();
+                        if (currentSubItemPopup != null)
+                        {
+                            Destroy(currentSubItemPopup);
+                            currentSubItemPopup = null;
+                        }
+                        makeDataButtons();
+                    }
+                    catch (Exception ex)
+                    {
+                        print(ex.Message);
+                    }
                     ResetStaticVariables reset = new ResetStaticVariables();
                     reset.ResetStatics();
                 });
@@ -847,7 +1095,7 @@ public class fileLoadMultiple : MonoBehaviour
                 tmp.fontSize = 32;
                 tmp.color = Color.white;
                 tmp.raycastTarget = false;
-
+                //  Run_NUMBER-Event_NUMBER
                 foreach (var path in paths)
                 {
                     try
@@ -1062,6 +1310,13 @@ public class fileLoadMultiple : MonoBehaviour
                                 break;
                             case "Photons_V1.obj":
                                 child.GetComponent<MeshRenderer>().material = emMaterial; break;
+                            case "RPCRecHits_V1.obj":
+                                foreach (var item in children)
+                                {
+                                    item.GetComponent<MeshRenderer>().material = rpcMaterial;
+                                }
+                                indexer++;
+                                break;
                             case "Tracks_V1.obj":
                             case "Tracks_V2.obj":
                             case "Tracks_V3.obj":
@@ -1113,7 +1368,6 @@ public class fileLoadMultiple : MonoBehaviour
                             case "Vertices_V1.obj":
                                 foreach (var item in children)
                                 {
-                                    //item.GetComponent<MeshRenderer>().material =
                                     VertexComponent component = item.AddComponent<VertexComponent>();
 
                                     JToken json = totalJson["vertexDatas"][indexer];
@@ -1132,12 +1386,34 @@ public class fileLoadMultiple : MonoBehaviour
                                 }
                                 break;
                             case "CSCSegments_V1.obj":
-                            case "CSCSegments_V2.obj":
                                 Color cscColor = new Color(255 / 255f, 153 / 255f, 229 / 255f); //#ff99ff
                                 foreach (var item in children)
                                 {
                                     child.GetComponent<MeshRenderer>().material = cscMaterial;
                                     item.GetComponent<MeshRenderer>().material.color = cscColor;
+                                    indexer++;
+                                }
+                                break;
+                            case "CSCSegments_V2.obj":
+                                cscColor = new Color(255 / 255f, 153 / 255f, 229 / 255f); //#ff99ff
+                                foreach (var item in children)
+                                {
+                                    child.GetComponent<MeshRenderer>().material = cscMaterial;
+                                    item.GetComponent<MeshRenderer>().material.color = cscColor;
+                                    CSCSegmentComponent component = item.AddComponent<CSCSegmentComponent>();
+
+                                    JToken json = totalJson["CSCSegments_V2"][indexer];
+
+                                    component.detid = json["detid"].Value<int>();
+                                    component.pos_1 = json["pos_1"].ToObject<double[]>();
+                                    component.pos_2 = json["pos_2"].ToObject<double[]>();
+                                    component.endcap = json["endcap"].Value<int>();
+                                    component.station = json["station"].Value<int>();
+                                    component.ring = json["ring"].Value<int>();
+                                    component.chamber = json["chamber"].Value<int>();
+                                    component.layer = json["layer"].Value<int>();
+
+                                    cscSegmentObjects.Add(item);
                                     indexer++;
                                 }
                                 break;
@@ -1172,26 +1448,88 @@ public class fileLoadMultiple : MonoBehaviour
                                 Color dtrColor = new Color(0 / 255f, 255 / 255f, 0 / 255f); //#00ff00
                                 foreach (var item in children)
                                 {
-                                    child.GetComponent<MeshRenderer>().material = dtrechitMaterial;
+                                    item.GetComponent<MeshRenderer>().material = dtrechitMaterial;
                                     item.GetComponent<MeshRenderer>().material.color = dtrColor;
+
+                                    DTRecHitComponent component = item.AddComponent<DTRecHitComponent>();
+                                    var json = totalJson["DTRecHits_V1Data"][indexer];
+
+                                    component.wireId = json["wireId"].Value<int>();
+                                    component.layerId = json["layerId"].Value<int>();
+                                    component.superLayerId = json["superLayerId"].Value<int>();
+                                    component.sectorId = json["sectorId"].Value<int>();
+                                    component.stationId = json["stationId"].Value<int>();
+                                    component.wheelId = json["wheelId"].Value<int>();
+                                    component.digitime = json["digitime"].Value<double>();
+
+                                    component.wirePos = json["wirePos"].ToObject<double[]>();
+                                    component.lPlusGlobalPos = json["lPlusGlobalPos"].ToObject<double[]>();
+                                    component.lMinusGlobalPos = json["lMinusGlobalPos"].ToObject<double[]>();
+                                    component.rPlusGlobalPos = json["rPlusGlobalPos"].ToObject<double[]>();
+                                    component.rMinusGlobalPos = json["rMinusGlobalPos"].ToObject<double[]>();
+                                    component.lGlobalPos = json["lGlobalPos"].ToObject<double[]>();
+                                    component.rGlobalPos = json["rGlobalPos"].ToObject<double[]>();
+                                    component.axis = json["axis"].ToObject<double[]>();
+                                    component.angle = json["angle"].Value<double>();
+                                    component.cellWidth = json["cellWidth"].Value<double>();
+                                    component.cellLength = json["cellLength"].Value<double>();
+                                    component.cellHeight = json["cellHeight"].Value<double>();
+
+                                    dtRecHitObjects.Add(item); // Add to list
                                     indexer++;
                                 }
                                 break;
                             case "DTRecSegment4D_V1.obj":
-                                Color dtrsColor = new Color(255 / 255f, 255 / 255f, 0 / 255f); //#ffff00
+                                Color dtrsColor = new Color(255 / 255f, 255 / 255f, 0 / 255f); // #ffff00
                                 foreach (var item in children)
                                 {
-                                    child.GetComponent<MeshRenderer>().material = dtrecsegmentMaterial;
+                                    item.GetComponent<MeshRenderer>().material = dtrecsegmentMaterial;
                                     item.GetComponent<MeshRenderer>().material.color = dtrsColor;
+
+                                    DTRecSegmentComponent component = item.AddComponent<DTRecSegmentComponent>();
+                                    JToken json = totalJson["DTRecSegment4D_V1Data"][indexer];
+
+                                    component.detid = json["detid"].Value<int>();
+                                    component.pos_1 = json["pos_1"].ToObject<double[]>();
+                                    component.pos_2 = json["pos_2"].ToObject<double[]>();
+                                    component.sectorId = json["sectorId"].Value<int>();
+                                    component.stationId = json["stationId"].Value<int>();
+                                    component.wheelId = json["wheelId"].Value<int>();
+                                    dtrecSegmentObjects.Add(item);
                                     indexer++;
                                 }
                                 break;
                             case "CSCRecHit2Ds_V2.obj":
-                                Color cscrhColor = new Color(153 / 255f, 255 / 255f, 229 / 255f); //#99ffe5
+                                Color cscrhColor = new Color(153 / 255f, 255 / 255f, 229 / 255f); // #99ffe5
                                 foreach (var item in children)
                                 {
                                     item.GetComponent<MeshRenderer>().material = cscrechitMaterial;
                                     item.GetComponent<MeshRenderer>().material.color = cscrhColor;
+
+                                    CSCRecHitComponent component = item.AddComponent<CSCRecHitComponent>();
+                                    var json = totalJson["CSCRecSegments2DsV2Datas"][indexer];
+
+                                    component.u1 = json["u1"].ToObject<double[]>();
+                                    component.u2 = json["u2"].ToObject<double[]>();
+                                    component.v1 = json["v1"].ToObject<double[]>();
+                                    component.v2 = json["v2"].ToObject<double[]>();
+                                    component.w1 = json["w1"].ToObject<double[]>();
+                                    component.w2 = json["w2"].ToObject<double[]>();
+
+                                    component.endcap = json["endcap"].Value<int>();
+                                    component.station = json["station"].Value<int>();
+                                    component.ring = json["ring"].Value<int>();
+                                    component.chamber = json["chamber"].Value<int>();
+                                    component.layer = json["layer"].Value<int>();
+
+                                    component.tpeak = json["tpeak"].Value<double>();
+                                    component.positionWithinStrip = json["positionWithinStrip"].Value<double>();
+                                    component.errorWithinStrip = json["errorWithinStrip"].Value<double>();
+
+                                    component.strips = json["strips"].Value<string>();
+                                    component.wireGroups = json["WireGroups"].Value<string>();
+
+                                    cscRecHitObjects.Add(item);
                                     indexer++;
                                 }
                                 break;
@@ -1229,54 +1567,6 @@ public class fileLoadMultiple : MonoBehaviour
 
                     catch (Exception ex) { }
                 }
-
-
-                //float dataButtonYpos = 750f; //scrollview
-                //int dataIterator = 0;
-                //foreach (string dataType in dataTypes)
-                //{
-                //    print("dataType: " + dataType);
-                //    List<string> dataInScene = getAvailableDataTypes(getCurrentEvent());
-                //    GameObject dataButton = new GameObject(dataType + "Button", typeof(RectTransform), typeof(CanvasRenderer), typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Button));
-                //    UnityEngine.UI.Image buttonImage = dataButton.GetComponent<UnityEngine.UI.Image>();
-                //    activeMap["SecondaryVertices_V1"] = false; //for demo
-                //    if (activeMap[dataType])
-                //    {
-                //        if (dataInScene.Contains(dataType))
-                //        {
-                //            buttonImage.color = new Color(0.6f, 1f, 0.6f); // Light green
-                //        }
-                //        else
-                //        {
-                //            buttonImage.color = new Color(1f, 0.6f, 0.6f); // Light red
-                //        }
-                //    }
-                //    else
-                //    {
-                //        buttonImage.color = Color.grey;
-                //    }
-
-
-                //    dataButton.transform.SetParent(dataOrganizer, false);
-                //    UnityEngine.UI.Outline dataOutline = dataButton.AddComponent<UnityEngine.UI.Outline>();
-                //    dataOutline.effectColor = Color.black;
-                //    RectTransform dataButtonRect = dataButton.GetComponent<RectTransform>();
-                //    dataButtonRect.sizeDelta = new Vector2(650, 50);
-                //    dataButtonRect.anchoredPosition = new Vector2(0, dataButtonYpos - dataIterator * eventButtonSpacingY);
-                //    dataIterator += 1;
-
-                //    GameObject dataTextObj = new GameObject("Text (TMP)", typeof(RectTransform), typeof(TextMeshProUGUI));
-                //    dataTextObj.transform.SetParent(dataButton.transform, false);
-                //    RectTransform dataTextObjRect = dataTextObj.GetComponent<RectTransform>();
-                //    dataTextObjRect.sizeDelta = new Vector2(600, 50);
-                //    TextMeshProUGUI dataTmp = dataTextObj.GetComponent<TextMeshProUGUI>();
-                //    dataTmp.text = dataType;
-                //    dataTmp.alignment = TextAlignmentOptions.Left;
-                //    dataTmp.fontSize = 32;
-                //    dataTmp.color = Color.white;
-                //    dataTmp.raycastTarget = false;
-
-                //}
             }
             try
             {
@@ -1289,6 +1579,7 @@ public class fileLoadMultiple : MonoBehaviour
  
         }
     }
+
     private List<GameObject> AllChilds(GameObject root)
     {
         List<GameObject> result = new List<GameObject>();
@@ -1369,7 +1660,6 @@ public class fileLoadMultiple : MonoBehaviour
             Transform child = parent.Find(type);
             if (child == null)
             {
-                UnityEngine.Debug.LogWarning($"Type '{type}' not found under Event{event_.name}."); //delete later but keep now for debugging
                 continue;
             }
             foreach (Transform grandChild in child)
@@ -1390,7 +1680,6 @@ public class fileLoadMultiple : MonoBehaviour
             Transform child = parent.Find(type);
             if (child == null)
             {
-                UnityEngine.Debug.LogWarning($"Type '{type}' not found under Event{event_.name}."); //delete later but keep now for debugging
                 continue;
             }
             result.Add(type);
@@ -1456,11 +1745,14 @@ public class fileLoadMultiple : MonoBehaviour
         currentScrollViewData = Instantiate(scrollViewPrefab, selectionMenu.transform);
         RectTransform rectTransformData = currentScrollViewData.GetComponent<RectTransform>();
         Vector2 newPosData = rectTransformData.anchoredPosition;
-        newPosData.x = 37f;
+        newPosData.x = -37f;
+        newPosData.y = 2f; // nathan added
         rectTransformData.anchoredPosition = newPosData;
         Transform dataContent = currentScrollViewData.transform.Find("Viewport/Content");
         RectTransform dataContentRect = dataContent.GetComponent<RectTransform>();
-        dataContentRect.sizeDelta = new Vector2(dataContentRect.sizeDelta.x, 2000);
+        //dataContentRect.sizeDelta = new Vector2(dataContentRect.sizeDelta.x, 2000);
+        float contentHeight = 2100; // dataTypes.Count * eventButtonSpacingY * 1.1f
+        dataContentRect.sizeDelta = new Vector2(dataContentRect.sizeDelta.x, contentHeight);
         Transform dataOrganizer = currentScrollViewData.transform.Find("Viewport/Content/Organizer");
         
         foreach (Transform child in dataOrganizer)
@@ -1468,7 +1760,7 @@ public class fileLoadMultiple : MonoBehaviour
             GameObject.Destroy(child.gameObject);
         }
 
-        float dataButtonYpos = 750f; //scrollview between 1000 and 750 good
+        float dataButtonYpos = 950f; //scrollview between 1000 and 750 good
         int dataIterator = 0;
         foreach (string dataType in dataTypes)
         {
@@ -1489,8 +1781,7 @@ public class fileLoadMultiple : MonoBehaviour
             }
             else
             {
-                buttonImage.color = Color.grey;
-
+                buttonImage.color = new Color(0.745f, 0.745f, 0.745f, 1f);
             }
 
 
@@ -1498,7 +1789,7 @@ public class fileLoadMultiple : MonoBehaviour
             UnityEngine.UI.Outline dataOutline = dataButton.AddComponent<UnityEngine.UI.Outline>();
             dataOutline.effectColor = Color.black;
             RectTransform dataButtonRect = dataButton.GetComponent<RectTransform>();
-            dataButtonRect.sizeDelta = new Vector2(650, 50);
+            dataButtonRect.sizeDelta = new Vector2(680, 50);
             dataButtonRect.anchoredPosition = new Vector2(0, dataButtonYpos - dataIterator * eventButtonSpacingY);
             dataIterator += 1;
 
@@ -1518,6 +1809,7 @@ public class fileLoadMultiple : MonoBehaviour
                         buttonImage.color = new Color(1f, 0.6f, 0.6f); // Light red
                     }
                 }
+                updateVisibility();
             });
 
             GameObject dataTextObj = new GameObject("Text (TMP)", typeof(RectTransform), typeof(TextMeshProUGUI));
@@ -1531,6 +1823,353 @@ public class fileLoadMultiple : MonoBehaviour
             dataTmp.color = Color.white;
             dataTmp.raycastTarget = false;
 
+            //if it has subitems, make a seperate button for view more 
+            if (dataTypesWithSubitems.Contains(dataType) && dataInScene.Contains(dataType))
+            {
+                GameObject viewMoreButton = new GameObject("ViewMoreButton", typeof(RectTransform), typeof(CanvasRenderer), typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Button));
+                viewMoreButton.transform.SetParent(dataButton.transform, false);
+
+                RectTransform viewMoreRect = viewMoreButton.GetComponent<RectTransform>();
+                viewMoreRect.anchorMin = new Vector2(1, 0.5f);
+                viewMoreRect.anchorMax = new Vector2(1, 0.5f);
+                viewMoreRect.pivot = new Vector2(1, 0.5f);
+                viewMoreRect.sizeDelta = new Vector2(120, 38);
+                viewMoreRect.anchoredPosition = new Vector2(-10, 0);
+
+                // Light blue background
+                UnityEngine.UI.Image viewMoreImage = viewMoreButton.GetComponent<UnityEngine.UI.Image>();
+                viewMoreImage.color = new Color(0.8f, 0.8f, 1f); // Light blue
+                viewMoreImage.type = UnityEngine.UI.Image.Type.Sliced;
+
+                // Outline
+                UnityEngine.UI.Outline viewOutline = viewMoreButton.AddComponent<UnityEngine.UI.Outline>();
+                viewOutline.effectColor = Color.black;
+
+                // TMP Text inside button
+                GameObject viewMoreText = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
+                viewMoreText.transform.SetParent(viewMoreButton.transform, false);
+
+                RectTransform viewTextRect = viewMoreText.GetComponent<RectTransform>();
+                viewTextRect.anchorMin = Vector2.zero;
+                viewTextRect.anchorMax = Vector2.one;
+                viewTextRect.offsetMin = Vector2.zero;
+                viewTextRect.offsetMax = Vector2.zero;
+
+                TextMeshProUGUI tmp = viewMoreText.GetComponent<TextMeshProUGUI>();
+                tmp.text = "View Subitems";
+                tmp.alignment = TextAlignmentOptions.Center;
+                tmp.fontSize = 18; // smaller font to fit nicely
+                tmp.color = Color.white; // match main button text
+                tmp.raycastTarget = false;
+
+                viewMoreButton.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
+                {
+                    //print($"Viewing more subitems for {dataType}");
+                     ShowSubItems(dataType); 
+                });
+            }
+
+        }
+    }
+
+
+    public void setCurrentObject(string dataType, int i)
+    {
+        // 1) grab parent object of event 2) go to its children 3) if children match one of the object lists... grab its children and add it to the list
+        GameObject event_ = allObjects[i]; // the name of the event
+        Transform parent = event_.transform;
+        Transform child = parent.Find(dataType);
+        if (child == null)
+        {
+            print($"Type '{dataType}' not found under {event_.name}");
+            currentObjectSub = null;
+        }
+        else
+        {
+            currentObjectSub = child.gameObject;
+        }
+    }
+    public void ShowSubItems(string dataType)
+    {
+        if (subObjects != null && currentSubItemMaterial != null)
+        {
+            foreach (GameObject obj in subObjects)
+            {
+                Renderer renderer = obj.GetComponent<Renderer>();
+                if (renderer != null)
+                {
+                    renderer.material = currentSubItemMaterial;
+                }
+            }
+        }
+        currentSubItemPopup = null;
+        currentSubItemType = "";
+        currentSubItemMaterial = null;
+        subItemIndex = 0;
+
+
+        setCurrentObject(dataType, getCurrentEvent());
+        if (currentObjectSub == null)
+        {
+            print($"Current object for {dataType} was not found.");
+            return;
+        }
+
+        subObjects = AllChilds(currentObjectSub);
+        if (subObjects.Count == 0)
+        {
+            print($"No children found under {currentObjectSub.name}");
+            return;
+        }
+        string subItemText = $"Selected Item: {currentObjectSub.name}\nCurrently selected subitem ({subItemIndex+1}/{subObjects.Count}): {subObjects[subItemIndex].name}\n{GetDataFromPhysicsObject(dataType, subItemIndex)}";
+        Transform existing = GameObject.Find("SubitemPopup")?.transform;
+        if (existing != null) Destroy(existing.gameObject);
+
+        GameObject popup = new GameObject("SubitemPopup", typeof(RectTransform), typeof(CanvasRenderer), typeof(UnityEngine.UI.Image));
+        popup.transform.SetParent(selectionMenu.transform, false);
+        popup.transform.localScale = selectionMenu.transform.localScale;
+        RectTransform popupRect = popup.GetComponent<RectTransform>();
+        popupRect.sizeDelta = new Vector2(70, 28);
+
+        // Match scrollView position and move slightly up
+        RectTransform scrollRect = currentScrollViewData.GetComponent<RectTransform>();
+        Vector2 scrollPos = scrollRect.anchoredPosition;
+        popupRect.anchorMin = new Vector2(0, 1);
+        popupRect.anchorMax = new Vector2(0, 1);
+        popupRect.pivot = new Vector2(0, 1);
+        //popupRect.anchoredPosition = new Vector2(scrollPos.x+80f, scrollPos.y-50f); // just 10f above scrollview top
+        popupRect.anchoredPosition = new Vector2(50f, -34f);
+
+        // Style the popup background
+        UnityEngine.UI.Image popupImage = popup.GetComponent<UnityEngine.UI.Image>();
+        popupImage.color = new Color(0.2f, 0.2f, 0.2f, 0.95f);
+        popup.AddComponent<UnityEngine.UI.Outline>().effectColor = Color.black;
+
+        // Text
+        GameObject popupText = new GameObject("PopupText", typeof(RectTransform), typeof(TextMeshProUGUI));
+        popupText.transform.SetParent(popup.transform, false);
+        RectTransform popupTextRect = popupText.GetComponent<RectTransform>();
+        popupTextRect.anchorMin = Vector2.zero;
+        popupTextRect.anchorMax = Vector2.one;
+        popupTextRect.offsetMin = new Vector2(2, 4);
+        popupTextRect.offsetMax = new Vector2(-30, 0);
+
+        TextMeshProUGUI tmpText = popupText.GetComponent<TextMeshProUGUI>();
+        tmpText.text = $"{subItemText}";
+        if (dataType == "DTRecHits_V1" || dataType == "CSCRecHit2Ds_V2")
+        {
+            tmpText.fontSize = 1.5f;
+        }
+        else
+        {
+            tmpText.fontSize = 2.3f;
+        }
+        tmpText.color = Color.white;
+        tmpText.alignment = TextAlignmentOptions.MidlineLeft;
+        tmpText.raycastTarget = false;
+        tmpText.enableWordWrapping = false;
+
+        // Close button
+        GameObject closeButton = new GameObject("CloseButton", typeof(RectTransform), typeof(CanvasRenderer), typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Button));
+        closeButton.transform.SetParent(popup.transform, false);
+
+        RectTransform closeRect = closeButton.GetComponent<RectTransform>();
+        closeRect.anchorMin = new Vector2(1, 1);
+        closeRect.anchorMax = new Vector2(1, 1);
+        closeRect.pivot = new Vector2(1, 1);
+        closeRect.sizeDelta = new Vector2(3, 3);
+        closeRect.anchoredPosition = new Vector2(-2, -1);
+
+        UnityEngine.UI.Image closeImage = closeButton.GetComponent<UnityEngine.UI.Image>();
+        closeImage.color = new Color(0.8f, 0.4f, 0.4f);
+
+        GameObject closeTextObj = new GameObject("CloseText", typeof(RectTransform), typeof(TextMeshProUGUI));
+        closeTextObj.transform.SetParent(closeButton.transform, false);
+        RectTransform closeTextRect = closeTextObj.GetComponent<RectTransform>();
+        closeTextRect.anchorMin = Vector2.zero;
+        closeTextRect.anchorMax = Vector2.one;
+        closeTextRect.offsetMin = Vector2.zero;
+        closeTextRect.offsetMax = Vector2.zero;
+
+        TextMeshProUGUI closeText = closeTextObj.GetComponent<TextMeshProUGUI>();
+        closeText.text = "X";
+        closeText.fontSize = 2;
+        closeText.alignment = TextAlignmentOptions.Center;
+        closeText.color = Color.white;
+        closeText.raycastTarget = false;
+
+        closeButton.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
+        {
+            foreach (GameObject obj in subObjects)
+            {
+                Renderer renderer = obj.GetComponent<Renderer>();
+                if (renderer != null && currentSubItemMaterial != null)
+                {
+                    renderer.material = currentSubItemMaterial;
+                }
+            }
+            currentSubItemPopup = null;
+            currentSubItemType = "";
+            currentSubItemMaterial = null;
+            subItemIndex = 0;
+
+            Destroy(popup);
+        });
+        currentSubItemPopup = popup;
+        currentSubItemType = dataType;
+        currentSubItemMaterial = subObjects[subItemIndex].GetComponent<Renderer>().sharedMaterial;
+        highlightSubItem();
+    }
+
+    public void highlightSubItem()
+    {
+        if (subItemIndex >= 0 && subItemIndex < subObjects.Count)
+        {
+            Material highlightMat = new Material(Shader.Find("Standard"));
+            highlightMat.color = new Color(1f, 1f, 1f, 0.4f);
+            highlightMat.SetFloat("_Mode", 3);
+            highlightMat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+            highlightMat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            highlightMat.SetInt("_ZWrite", 0);
+            highlightMat.DisableKeyword("_ALPHATEST_ON");
+            highlightMat.EnableKeyword("_ALPHABLEND_ON");
+            highlightMat.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+            highlightMat.renderQueue = 3000;
+
+            for (int i = 0; i < subObjects.Count; i++)
+            {
+                GameObject subObject = subObjects[i];
+                Renderer renderer = subObject.GetComponent<Renderer>();
+                if (i == subItemIndex)
+                { 
+                    renderer.material = highlightMat;
+                }
+                else
+                {
+                    renderer.sharedMaterial = currentSubItemMaterial;
+                }
+            }
+        }
+        else
+        {
+            UnityEngine.Debug.LogWarning("Index out of range: " + subItemIndex);
+        }
+    }
+    public void NavigateSubitems(int direction)
+    {
+        if (currentSubItemPopup == null || !currentSubItemPopup.activeSelf)
+        {
+            return;
+        }
+        subItemIndex = (subItemIndex + direction + subObjects.Count) % subObjects.Count;
+
+        if (currentSubItemPopup != null && !string.IsNullOrEmpty(currentSubItemType))
+        {
+            string updatedText = $"Selected Item: {currentObjectSub.name}\nCurrently selected subitem ({subItemIndex + 1}/{subObjects.Count}): {subObjects[subItemIndex].name}\n{GetDataFromPhysicsObject(currentSubItemType, subItemIndex)}";
+            TextMeshProUGUI textComp = currentSubItemPopup.transform.Find("PopupText")?.GetComponent<TextMeshProUGUI>();
+            if (textComp != null)
+            {
+                textComp.text = updatedText;
+            }
+            else
+            {
+                print("textComp = null");
+            }
+        }
+        highlightSubItem();
+    }
+    //this needs the name of the datatype + the list of subObjects which gets set to whatever datatype you're looking at
+    private string GetDataFromPhysicsObject(string name, int index2)
+    {
+        string dataString;
+        switch (name)
+        {
+            case "PFMET":
+                dataString = this.subObjects[index2].GetComponent<METComponent>().GetData();
+                break;
+            case "PFJets":
+            case "PFJets_V2": 
+                dataString = this.subObjects[index2].GetComponent<JetComponent>().GetData();
+                break;
+            case "EBRecHits":
+                dataString = "";
+                break;
+            case "EERecHits":
+                dataString = "";
+                break;
+            case "ESRecHits":
+                dataString = "";
+                break;
+            case "GsfElectrons_V1":
+            case "GsfElectrons_V2":
+            case "GsfElectrons_V3":
+                dataString = this.subObjects[index2].GetComponent<ElectronComponent>().GetData();
+                break;
+            case "HBRecHits":
+                dataString = "";
+                break;
+            case "HERecHits":
+                dataString = "";
+                break;
+            case "HFRecHits":
+                dataString = "";
+                break;
+            case "HORecHits":
+                dataString = "";
+                break;
+            case "MuonChambers":
+                dataString = "";
+                break;
+            case "TrackerMuons_V1":
+            case "TrackerMuons_V2":
+                dataString = this.subObjects[index2].GetComponent<TrackerMuonComponent>().GetData();
+                break;
+            case "GlobalMuons_V1":
+            case "GlobalMuons_V2":
+                dataString = this.subObjects[index2].GetComponent<GlobalMuonComponent>().GetData();
+                break;
+            case "StandaloneMuons_V1":
+            case "StandaloneMuons_V2":
+                dataString = this.subObjects[index2].GetComponent<StandaloneMuonComponent>().GetData();
+                break;
+            case "Photons_V1":
+                dataString = ""; // Fill in if you add a PhotonComponent later
+                break;
+            case "Tracks_V1":
+            case "Tracks_V2":
+            case "Tracks_V3":
+            case "Tracks_V4":
+                dataString = this.subObjects[index2].GetComponent<TrackComponent>().GetData();
+                break;
+            case "SuperClusters_V1":
+                dataString = this.subObjects[index2].GetComponent<SuperClusterComponent>().GetData();
+                break;
+            case "PrimaryVertices_V1":
+            case "SecondaryVertices_V1":
+            case "Vertices_V1":
+                dataString = this.subObjects[index2].GetComponent<VertexComponent>().GetData();
+                break;
+            case "DTRecSegment4D_V1":
+                dataString = this.subObjects[index2].GetComponent<DTRecSegmentComponent>().GetData();
+                break;
+            case "DTRecHits_V1":
+                dataString = this.subObjects[index2].GetComponent<DTRecHitComponent>().GetData();
+                break;
+            case "CSCRecHit2Ds_V2":
+                dataString = this.subObjects[index2].GetComponent<CSCRecHitComponent>().GetData();
+                break;
+            case "CSCSegments_V2":
+                dataString = this.subObjects[index2].GetComponent<CSCSegmentComponent>().GetData();
+                break;
+            default: dataString = ""; break;
+        }
+        return dataString;
+    }
+    public void updateVisibility()
+    {
+        foreach (GameObject item in objectsLoaded) //make items active or inactive
+        {
+            item.SetActive(activeMap[item.name]);
         }
     }
 

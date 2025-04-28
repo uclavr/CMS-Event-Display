@@ -26,7 +26,7 @@ public class ElectronComponent : MonoBehaviour
     public string GetData()
     {
         string data = "";
-        data += $"Pt: {pt}\n" + $"Phi: {phi}\n" + $"Eta: {eta}\n" + $"Charge: {charge}\n"  + $"Position: ({position[0]}, {position[1]}, {position[2]})\n" + $"Direction: ({direction[0]}, {direction[1]}, {direction[2]})";
+        data += $"Pt: {Math.Round(pt, 2)} GeV\n" + $"Phi: {Math.Round(phi, 2)}\n" + $"Eta: {Math.Round(eta, 2)}\n" + $"Charge: {charge}\n"  + $"Position: ({Math.Round(position[0], 2)}, {Math.Round(position[1], 2)}, {Math.Round(position[2], 2)})\n" + $"Direction: ({Math.Round(direction[0], 2)}, {Math.Round(direction[1], 2)}, {Math.Round(direction[2], 2)})";
         return data;
     }
 }

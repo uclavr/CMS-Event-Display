@@ -25,7 +25,7 @@ public class TrackerMuonComponent : MonoBehaviour
     public string GetData()
     {
         string data = "";
-        data += $"Pt: {pt}\n" + $"Charge: {charge}\n" + $"Position: ({position[0]}, {position[1]}, {position[2]})\n" + $"Phi: {phi}\n" + $"Eta: {eta}";
+        data += $"Pt: {Math.Round(pt, 2)} GeV\n" + $"Charge: {charge}\n" + $"Position: ({Math.Round(position[0], 2)}, {Math.Round(position[1], 2)}, {Math.Round(position[2], 2)})\n" + $"Phi: {Math.Round(phi, 2)}\n" + $"Eta: {Math.Round(eta, 2)}";
         return data;
     }
 }

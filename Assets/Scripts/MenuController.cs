@@ -73,9 +73,14 @@ public class MenuController : MonoBehaviour
     {
         SceneManager.LoadScene("B jet plus mu");
     }
-    public void CustomBtn() 
+    public void CustomBtn()
     {
         SceneManager.LoadScene("LoadingScene");
+
+    }
+    public void CustomTestBtn()
+    {
+        SceneManager.LoadScene("LoadingSceneTest");
 
     }
     public void LambdaBtn()

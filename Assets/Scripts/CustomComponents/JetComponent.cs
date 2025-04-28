@@ -24,7 +24,7 @@ public class JetComponent : MonoBehaviour
     public string GetData()
     {
         string data = "";
-        data += $"ET: {et}\n" + $"Phi: {phi}\n" + $"Eta: {eta}\n" + $"Theta: {theta}\n";
+        data += $"ET: {Math.Round(et, 2)} GeV\n" + $"Phi: {Math.Round(phi, 2)}\n" + $"Eta: {Math.Round(eta, 2)}\n" + $"Theta: {Math.Round(theta, 2)}\n";
         /*data.Add($"ET: {et}");
         data.Add($"Phi: {phi}");
         data.Add($"Eta: {eta}");

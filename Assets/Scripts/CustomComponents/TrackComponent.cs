@@ -28,7 +28,7 @@ public class TrackComponent : MonoBehaviour
     public string GetData()
     {
         string data = "";
-        data += $"Pt: {pt}\n" + $"Phi: {phi}\n" + $"Eta: {eta}\n" + $"Charge: {charge}\n" + $"Chi 2: {chi2}\n" + $"NDoF: {ndof}";
+        data += $"Pt: {Math.Round(pt, 2)} GeV\n" + $"Phi: {Math.Round(phi, 2)}\n" + $"Eta: {Math.Round(eta, 2)}\n" + $"Charge: {charge}\n" + $"Chi 2: {Math.Round(chi2, 2)}\n" + $"NDoF: {Math.Round(ndof, 2)}";
         //$"Position: ({position[0]}, {position[1]}, {position[2]})\n" + $"Direction: ({direction[0]}, {direction[1]}, {direction[2]})"
         return data;
     }

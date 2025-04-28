@@ -32,9 +32,11 @@ public class LegoTabController : MonoBehaviour
         {
             // Activate MenuCanvas and show the last active canvas
             MenuCanvas.SetActive(true);
-            if (lastActive == 4)
+            //if (lastActive == 4)
+            if (cubeboi.activeSelf)
             {
                 ChildTabs[4].SetActive(true);
+                ChildTabs[0].SetActive(true); // Also turn on the selection menu for event switching
                 //MenuCanvas.SetActive(false);
             }
             else
@@ -75,6 +77,11 @@ public class LegoTabController : MonoBehaviour
     public void ControlsBtn()
     {
         ShowCanvas(3);
+    }
+
+    public void LegoBtn()
+    {
+        ShowCanvas(4);
     }
 
     // Switch to LEGO plot

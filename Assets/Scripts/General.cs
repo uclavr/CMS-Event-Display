@@ -8,6 +8,8 @@ public class General : MonoBehaviour
 
 {
     public GameObject CutCanvas;
+    public fileLoadMultiple loader;
+
     public GameObject Event;
     // Start is called before the first frame update
     void Start()
@@ -42,5 +44,18 @@ public class General : MonoBehaviour
             //Set the current State to the flipped value
             CutCanvas.SetActive(currentState);
         }
+
+        if (loader.subObjects.Count > 0)
+        {
+            if (OVRInput.GetDown(OVRInput.Button.Four))
+            {
+                loader.NavigateSubitems(1);
+            }
+            else if (OVRInput.GetDown(OVRInput.Button.Three))
+            {
+                loader.NavigateSubitems(-1);
+            }
+        }
     }
+
 }

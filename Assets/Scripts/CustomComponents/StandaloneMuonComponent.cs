@@ -27,7 +27,7 @@ public class StandaloneMuonComponent : MonoBehaviour
     public string GetData()
     {
         string data = "";
-        data += $"Pt: {pt}\n" + $"Charge: {charge}\n" + $"Position: ({position[0]}, {position[1]}, {position[2]})\n" + $"Phi: {phi}\n" + $"Eta: {eta}\n" + $"CaloEnergy: {caloEnergy}\n";
+        data += $"Pt: {Math.Round(pt, 2)} GeV\n" + $"Charge: {charge}\n" + $"Position: ({Math.Round(position[0], 2)}, {Math.Round(position[1], 2)}, {Math.Round(position[2], 2)})\n" + $"Phi: {Math.Round(phi, 2)}\n" + $"Eta: {Math.Round(eta, 2)}\n" + $"CaloEnergy: {Math.Round(caloEnergy, 2)} GeV\n";
         /*data.Add($"ET: {et}");
         data.Add($"Phi: {phi}");
         data.Add($"Eta: {eta}");

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,7 +15,7 @@ public class METComponent : MonoBehaviour
     public string GetData()
     {
         string data = "";
-        data += $"Phi: {phi}\n" + $"Pt: {pt}\n" + $"Px: {px}\n" + $"Py: {py}\n" + $"Pz: {pz}";
+        data += $"Phi: {Math.Round(phi, 2)}\n" + $"Pt: {Math.Round(pt, 2)} GeV\n" + $"Px: {Math.Round(px, 2)} GeV\n" + $"Py: {Math.Round(py, 2)} GeV\n" + $"Pz: {Math.Round(pz, 2)} GeV";
         return data;
     }
 

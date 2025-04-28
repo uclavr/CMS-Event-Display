@@ -32,7 +32,7 @@ public class SuperClusterComponent : MonoBehaviour
     public string GetData()
     {
         string data = "";
-        data += $"Energy: {energy}\n" + $"Position: ({position[0]}, {position[1]}, {position[2]})\n" + $"Eta: {eta}\n" + $"Phi: {phi}\n" + $"Algo: {algo}\n" + $"EtaWidth: {etaWidth}\n" + $"PhiWidth: {phiWidth}\n" + $"RawEnergy: {rawEnergy}\n" + $"PreshowerEnergy: {preshowerEnergy}";
+        data += $"Energy: {Math.Round(energy, 2)} GeV\n" + $"Position: ({Math.Round(position[0], 2)}, {Math.Round(position[1], 2)}, {Math.Round(position[2], 2)})\n" + $"Eta: {Math.Round(eta, 2)}\n" + $"Phi: {Math.Round(phi, 2)}\n" + $"Algo: {algo}\n" + $"EtaWidth: {Math.Round(etaWidth, 2)}\n" + $"PhiWidth: {Math.Round(phiWidth, 2)}\n" + $"RawEnergy: {Math.Round(rawEnergy, 2)} GeV\n" + $"PreshowerEnergy: {Math.Round(preshowerEnergy, 2)} GeV";
 
         return data;
     }
